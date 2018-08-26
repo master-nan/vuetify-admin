@@ -4,7 +4,7 @@
       div.pa-4.text-xs-center
         div.display-1.py-4(style="color:#1565C0") Walnutech
         div
-          v-btn(dark href="https://github.com/master-nan/my-vuetify" color="primary")
+          v-btn(dark href="https://github.com/master-nan/vuetify-admin" color="primary")
             v-icon(left, dark) star
             span Github
       v-divider

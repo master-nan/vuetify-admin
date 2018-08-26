@@ -21,8 +21,8 @@
                   span Github
               v-card-text
                 v-form(ref="form")
-                  v-text-field(prepend-icon="person" v-model="from.username" :rules="[v => !!v || 'Username is required']" label="Username" type="text")
-                  v-text-field(prepend-icon="lock" v-model="from.password"  :rules="[v => !!v || 'Password is required']" label="Password" type="password")
+                  v-text-field(prepend-icon="person" v-model="form.username" :rules="[v => !!v || 'Username is required']" label="Username" type="text")
+                  v-text-field(prepend-icon="lock" v-model="form.password"  :rules="[v => !!v || 'Password is required']" label="Password" type="password")
               v-card-actions
                 v-spacer
                 v-btn(color="primary" @click="submit") Login
@@ -32,14 +32,15 @@
 </template>
 <script>
 import Footer from '@/views/components/public/Footer'
+import api from '@/api'
 import util from '@/utils'
 export default {
   data () {
     return {
       self: this,
-      link: 'https://github.com/master-nan/my-vuetify',
+      link: 'https://github.com/master-nan/vuetify-admin',
       gradient: 'to top right, #1A237E, #BBDEFB',
-      from: {
+      form: {
         username: null,
         password: null
       },
@@ -58,12 +59,18 @@ export default {
     async submit () {
       if (this.$refs.form.validate()) {
         this.$refs.loading.open()
+        let res = await api.base.login(this.form)
         await util.sleep()
         this.$refs.loading.close()
-        this.$refs.message.open('登录成功', 'success')
-        await util.sleep()
-        sessionStorage.setItem('token', 1)
-        this.$router.push('/index')
+        if (res.code === 200) {
+          this.$refs.message.open('登录成功', 'success')
+          sessionStorage.setItem('user', JSON.stringify(res.data.user))
+          sessionStorage.setItem('token', res.data.token)
+          await util.sleep(500)
+          this.$router.push('/index')
+        } else {
+          this.$refs.message.open(res.error, 'error')
+        }
       }
     },
     changeLocale (e) {

@@ -1,9 +1,9 @@
 import http from '@/utils/http'
-let path = 'department'
+let path = 'menu'
 
-let index = async (data = {}) => {
+let index = async () => {
   let url = path
-  let result = await http.get(url, data)
+  let result = await http.get(url, {})
   return result
 }
 

@@ -1,5 +1,5 @@
 import http from '@/utils/http'
-let path = 'department'
+let path = 'rule'
 
 let index = async (data = {}) => {
   let url = path

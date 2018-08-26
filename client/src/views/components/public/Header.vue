@@ -33,6 +33,7 @@
           v-list-tile-title 退出
 </template>
 <script>
+import api from '@/api'
 import util from '@/utils'
 export default {
   name: 'top',
@@ -58,9 +59,15 @@ export default {
       this.$emit('setClipped', !this.clipped)
     },
     async handleCommand (e) {
-      console.log(e)
       switch (e) {
         case 'logout':
+          let res = await api.comm.logout()
+          util.response(res, this)
+          if (res.code === 200) {
+            util.message('您已退出')
+            await util.sleep(300)
+            util.clearSome(this)
+          }
           util.clearSome(this)
           break
         case 'change':

@@ -1,8 +1,8 @@
 {
-  "name": "y",
+  "name": "vuetify-admin-client",
   "version": "1.0.0",
-  "description": "y",
-  "author": "y",
+  "description": "client",
+  "author": "master-nan",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

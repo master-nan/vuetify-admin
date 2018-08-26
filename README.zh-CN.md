@@ -1,6 +1,4 @@
-<p algin="center">
-  <h3>vuetify-admin</h3>
-</p>
+<h1 align="center">vuetify-admin</h1>
 
 
 简体中文 | [English](./README.md)

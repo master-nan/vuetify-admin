@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : localhost_3306
+ Source Server         : 本地
  Source Server Type    : MySQL
- Source Server Version : 50721
- Source Host           : localhost:3306
- Source Schema         : master
+ Source Server Version : 80011
+ Source Host           : localhost:3308
+ Source Schema         : vuetify_admin
 
  Target Server Type    : MySQL
- Target Server Version : 50721
+ Target Server Version : 80011
  File Encoding         : 65001
 
- Date: 05/08/2018 15:17:19
+ Date: 26/08/2018 22:38:20
 */
 
 SET NAMES utf8mb4;

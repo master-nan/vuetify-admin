@@ -31,8 +31,8 @@ module.exports = {
     Content: '确认删除当前数据 ?'
   },
   Tag: {
-    Enable: '启用',
-    Disable: '禁用'
+    Enabled: '启用',
+    Disabled: '禁用'
   },
   Table: {
     Name: '名称',

@@ -1,1 +1,1 @@
-#private project#
+## vuetify-admin-server

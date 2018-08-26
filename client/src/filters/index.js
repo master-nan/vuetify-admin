@@ -19,13 +19,13 @@ Vue.filter('i18nName', function (title = '', key = '', vm = null) {
 })
 
 Vue.filter('statusFilter', function (val, type = 1) {
-  let title = 'Enable'
+  let title = 'Enabled'
   switch (type) {
     case 1:
       if (val === 1) {
-        title = 'Enable'
+        title = 'Enabled'
       } else {
-        title = 'Disable'
+        title = 'Disabled'
       }
       break
     default:

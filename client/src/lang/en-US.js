@@ -31,8 +31,8 @@ module.exports = {
     Content: 'Confirm delete current data ?'
   },
   Tag: {
-    Enable: 'Enable',
-    Disable: 'Disable'
+    Enabled: 'Enabled',
+    Disabled: 'Disabled'
   },
   Table: {
     Name: 'Name',

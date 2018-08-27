@@ -34,32 +34,6 @@ export const currentRouter = [
     }]
   },
   {
-    path: '/member',
-    component: Home,
-    redirect: '/member/index',
-    show: true,
-    name: 'member',
-    meta: {
-      title: 'Member',
-      icon: 'people_outline'
-    },
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/member/Index.vue'),
-        name: 'all-member',
-        meta: { title: 'All_Member', icon: 'people_outline' }
-      },
-      {
-        path: 'edit/:id(\\d+)',
-        component: () => import('@/views/member/Edit.vue'),
-        name: 'edit-member',
-        meta: { title: 'Edit_Member', icon: 'edit' },
-        hidden: true
-      }
-    ]
-  },
-  {
     path: '/user',
     component: Home,
     redirect: '/user/index',

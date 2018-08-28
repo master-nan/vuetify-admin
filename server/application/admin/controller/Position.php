@@ -13,7 +13,7 @@ class Position extends Comm
     public function index()
     {
         if (!$this->checkRule()) {
-            return msg(102, null, '您没有权限操作');
+            return msg(401, null, '您没有权限操作');
         }
         $status = isset($this->param['status']) ? $this->param['status'] : null;
         $data = [];
@@ -24,7 +24,7 @@ class Position extends Comm
         if ($ret) {
             return msg(200, $ret);
         } else {
-            return msg(100, null, $this->model->getError());
+            return msg(204, null, $this->model->getError());
         }
     }
 
@@ -42,7 +42,7 @@ class Position extends Comm
     public function save()
     {
         if (!$this->checkRule()) {
-            return msg(102, null, '您没有权限操作');
+            return msg(401, null, '您没有权限操作');
         }
         if ($this->param['status'] == 'true') {
             $this->param['status'] = 1;
@@ -60,7 +60,7 @@ class Position extends Comm
     public function update()
     {
         if (!$this->checkRule()) {
-            return msg(102, null, '您没有权限操作');
+            return msg(401, null, '您没有权限操作');
         }
         if ($this->param['id']) {
             $id = $this->param['id'];

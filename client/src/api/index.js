@@ -2,7 +2,7 @@ import base from './base'
 import comm from './comm'
 import department from './department'
 import menu from './menu'
-import postition from './postition'
+import position from './position'
 import rule from './rule'
 
 export default {
@@ -10,6 +10,6 @@ export default {
   comm,
   department,
   menu,
-  postition,
+  position,
   rule
 }

@@ -7,7 +7,7 @@
       div
         v-btn.info.z-index-1(fab absolute top right dark @click.stop="add")
           v-icon add
-      v-data-table.elevation-1(:loading="false" :headers="headers" :items="data" hide-actions :total-items="30")
+      v-data-table.elevation-1(:loading="loading" :headers="headers" :items="data" hide-actions :total-items="30")
         template(slot="headerCell" slot-scope="props")
           v-tooltip(bottom)
             span(slot="activator") {{ props.header.text }}
@@ -50,6 +50,7 @@
 </template>
 <script>
 import util from '@/utils'
+import api from '@/api'
 export default{
   name: 'position-index',
   data () {
@@ -75,26 +76,7 @@ export default{
         { text: 'Status', sortable: false },
         { text: 'Action', sortable: false }
       ],
-      data: [
-        {
-          id: 1,
-          name: 'Frozen Yogurt',
-          remark: 115,
-          status: 1
-        },
-        {
-          id: 2,
-          name: 'Ice cream sandwich',
-          remark: 115,
-          status: 1
-        },
-        {
-          id: 3,
-          name: 'Eclair',
-          remark: 115,
-          status: 1
-        }
-      ]
+      data: []
     }
   },
   methods: {
@@ -151,7 +133,15 @@ export default{
         this.$refs.form.reset()
       }
     },
-    getData () {
+    async getData () {
+      this.loading = true
+      let res = await api.position.index()
+      util.response(res, this)
+      await util.sleep(500)
+      this.loading = false
+      if (res.code === 200) {
+        this.data = res.data
+      }
     }
   },
   created () {

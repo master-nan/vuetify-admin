@@ -8,10 +8,10 @@ let response = async (res, vm) => {
     await sleep()
     clearSome(vm)
     return false
-  } else if (res.code === 102) {
+  } else if (res.code === 401) {
     message(res.error, 'error')
     await sleep()
-    vm.$router.push('/index')
+    vm.$router.push('/401')
     return false
   }
 }

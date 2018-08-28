@@ -7,7 +7,7 @@
       div
         v-btn.info.z-index-1(fab absolute top right dark @click.stop="add")
           v-icon add
-      v-data-table.elevation-1(:loading="false" :headers="headers" :items="data" hide-actions :total-items="30")
+      v-data-table.elevation-1(:loading="loading" :headers="headers" :items="data" hide-actions :total-items="30")
         template(slot="headerCell" slot-scope="props")
           v-tooltip(bottom)
             span(slot="activator") {{ props.header.text|i18nName('Table',self) }}
@@ -15,7 +15,6 @@
         template(slot="items" slot-scope="props")
           td {{ props.index + 1 }}
           td.text-xs-left {{ props.item.name }}
-          td.text-xs-left {{ props.item.remark }}
           td.text-xs-left
             v-chip(v-if="props.item.status == 1" color="success" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
             v-chip(v-else color="error" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
@@ -37,7 +36,6 @@
         v-card-text
           v-form(ref="form" v-model="valid" lazy-validation)
             v-text-field(v-model="form.name" :rules="nameRules" label="部门名称" required)
-            v-text-field(v-model="form.remark" label="备注" required)
             v-btn.mt-10.mr-10(@click="cancel" dark)
               v-icon(dark left) mdi-close-circle
               slot {{'Cancel'|i18nName('Button',self)}}
@@ -50,6 +48,7 @@
 </template>
 <script>
 import util from '@/utils'
+import api from '@/api'
 export default{
   name: 'department-index',
   data () {
@@ -58,7 +57,6 @@ export default{
       loading: false,
       form: {
         name: null,
-        remark: null,
         status: 1
       },
       type: 1,
@@ -71,30 +69,10 @@ export default{
       headers: [
         { text: 'Index', sortable: false },
         { text: 'Name', align: 'left', sortable: false },
-        { text: 'Remark', sortable: false },
         { text: 'Status', sortable: false },
         { text: 'Action', sortable: false }
       ],
-      data: [
-        {
-          id: 1,
-          name: 'Frozen Yogurt',
-          remark: 115,
-          status: 1
-        },
-        {
-          id: 2,
-          name: 'Ice cream sandwich',
-          remark: 115,
-          status: 1
-        },
-        {
-          id: 3,
-          name: 'Eclair',
-          remark: 115,
-          status: 1
-        }
-      ]
+      data: []
     }
   },
   methods: {
@@ -107,6 +85,7 @@ export default{
       this.index = e.index
       this.form = util.cloneDeep(e.item)
       this.show = true
+      console.log(this.form)
     },
     del (e) {
       let s = this
@@ -132,26 +111,51 @@ export default{
     async submit () {
       if (this.$refs.form.validate()) {
         this.$refs.loading.open()
-        await util.sleep()
-        this.$refs.loading.close()
-        this.show = false
-        this.$refs.message.open('操作成功', 'success')
         if (this.type === 1) {
           let d = [
             {
               name: this.form.name,
-              remark: this.form.remark,
               status: this.form.status
             }
           ]
-          this.data = d.concat(this.data)
+          let res = await api.department.save(d)
+          await util.sleep()
+          this.$refs.loading.close()
+          util.response(res, this)
+          if (res.code === 200) {
+            this.$refs.message.open('操作成功', 'success')
+            this.show = false
+
+            this.data = d.concat(this.data)
+            this.$refs.form.reset()
+          } else {
+            this.$refs.message.open(res.error, 'error')
+          }
         } else {
-          this.data[this.index] = util.cloneDeep(this.form)
+          let res = await api.department.update(this.form)
+          util.response(res, this)
+          await util.sleep(500)
+          this.$refs.loading.close()
+          if (res.code === 200) {
+            this.$refs.message.open('操作成功', 'success')
+            this.show = false
+            this.data[this.index] = util.cloneDeep(this.form)
+            this.$refs.form.reset()
+          } else {
+            this.$refs.message.open(res.error, 'error')
+          }
         }
-        this.$refs.form.reset()
       }
     },
-    getData () {
+    async getData () {
+      this.loading = true
+      let res = await api.department.index()
+      util.response(res, this)
+      await util.sleep(500)
+      this.loading = false
+      if (res.code === 200) {
+        this.data = res.data
+      }
     }
   },
   created () {

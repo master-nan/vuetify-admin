@@ -44,14 +44,9 @@ class Position extends Comm
         if (!$this->checkRule()) {
             return msg(401, null, '您没有权限操作');
         }
-        if ($this->param['status'] == 'true') {
-            $this->param['status'] = 1;
-        } else {
-            $this->param['status'] = 0;
-        }
         $ret = $this->model->savePosition($this->param);
         if ($ret) {
-            return msg(200, null, '添加成功');
+            return msg(200, $this->model->getLastInsID(), '添加成功');
         } else {
             return msg(100, null, $this->model->getError());
         }
@@ -67,11 +62,6 @@ class Position extends Comm
             unset($this->param['id']);
         } else {
             return msg(100, null, '参数错误');
-        }
-        if ($this->param['status'] == 'true') {
-            $this->param['status'] = 1;
-        } else {
-            $this->param['status'] = 0;
         }
         $ret = $this->model->updatePosition($id, $this->param);
         if ($ret) {

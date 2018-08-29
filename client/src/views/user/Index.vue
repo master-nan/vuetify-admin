@@ -114,11 +114,13 @@ export default{
     add () {
       this.type = 1
       this.show = true
+      this.$refs.form.reset()
     },
     edit (e) {
       this.type = 2
       this.index = e.index
-      this.form = util.cloneDeep(e.item)
+      this.form = Object.assign({}, e.item)
+      console.log(this.form)
       this.show = true
     },
     del (e) {
@@ -136,11 +138,15 @@ export default{
       this.show = false
     },
     enable (e) {
+      console.log('e=====', e)
       if (e.item.status === 1) {
         e.item.status = 2
+        console.log('2')
       } else {
         e.item.status = 1
+        console.log('1')
       }
+      console.log(this.data)
     },
     async submit () {
       if (this.$refs.form.validate()) {
@@ -150,18 +156,12 @@ export default{
         this.show = false
         this.$refs.message.open('操作成功', 'success')
         if (this.type === 1) {
-          let d = [
-            {
-              name: this.form.name,
-              remark: this.form.remark,
-              status: this.form.status
-            }
-          ]
-          this.data = d.concat(this.data)
+          this.data.unshift(this.form)
         } else {
-          this.data[this.index] = util.cloneDeep(this.form)
+          // let a = Object.assign({}, this.form)
+          console.log(this.form)
+          this.data.splice(this.index, 1, this.form)
         }
-        this.$refs.form.reset()
       }
     },
     handleFilter () {

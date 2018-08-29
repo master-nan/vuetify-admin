@@ -23,7 +23,7 @@
               v-icon edit
             v-btn.my-1.mr-10(fab small color="error" dark @click="del(props)")
               v-icon delete
-            v-btn.my-1(style="min-width:60px" v-if="props.item.status == 1" small color="warning" @click="enable(props)")
+            v-btn.my-1(style="min-width:60px" v-if="props.item.status === 1" small color="warning" @click="enable(props)")
               //- v-icon delete
               slot {{'Disable'|i18nName('Button',self)}}
             v-btn.my-1(style="min-width:60px" v-else small color="success" @click="enable(props)")
@@ -35,7 +35,7 @@
       v-card
         v-card-text
           v-form(ref="form" v-model="valid" lazy-validation)
-            v-text-field(v-model="form.name" :rules="nameRules" label="部门名称" required)
+            v-text-field(v-model="ruleForm.name" :rules="nameRules" label="部门名称" required)
             v-btn.mt-10.mr-10(@click="cancel" dark)
               v-icon(dark left) mdi-close-circle
               slot {{'Cancel'|i18nName('Button',self)}}
@@ -55,7 +55,7 @@ export default{
     return {
       self: this,
       loading: false,
-      form: {
+      ruleForm: {
         name: null,
         status: 1
       },
@@ -79,13 +79,16 @@ export default{
     add () {
       this.type = 1
       this.show = true
+      this.resetTemp()
+      this.$nextTick(() => {
+        this.$refs.form.reset()
+      })
     },
     edit (e) {
       this.type = 2
       this.index = e.index
-      this.form = util.cloneDeep(e.item)
+      this.ruleForm = util.cloneDeep(e.item)
       this.show = true
-      console.log(this.form)
     },
     del (e) {
       let s = this
@@ -101,46 +104,52 @@ export default{
     cancel () {
       this.show = false
     },
-    enable (e) {
-      if (e.item.status === 1) {
-        e.item.status = 2
+    async enable (e) {
+      let data = {
+        'id': e.item.id,
+        'status': e.item.status === 1 ? 2 : 1
+      }
+      let res = await api.department.enable(data)
+      util.response(res, this)
+      if (res.code === 200) {
+        e.item.status = data.status
       } else {
-        e.item.status = 1
+        this.$refs.message.open(res.error, 'error')
+      }
+    },
+    resetTemp () {
+      this.ruleForm = {
+        id: null,
+        name: '',
+        status: 1
       }
     },
     async submit () {
       if (this.$refs.form.validate()) {
         this.$refs.loading.open()
         if (this.type === 1) {
-          let d = [
-            {
-              name: this.form.name,
-              status: this.form.status
-            }
-          ]
-          let res = await api.department.save(d)
+          delete this.ruleForm.id
+          let res = await api.department.save(this.ruleForm)
           await util.sleep()
           this.$refs.loading.close()
           util.response(res, this)
           if (res.code === 200) {
             this.$refs.message.open('操作成功', 'success')
             this.show = false
-
-            this.data = d.concat(this.data)
-            this.$refs.form.reset()
+            this.ruleForm.id = parseInt(res.data)
+            this.data.unshift(this.ruleForm)
           } else {
             this.$refs.message.open(res.error, 'error')
           }
         } else {
-          let res = await api.department.update(this.form)
+          let res = await api.department.update(this.ruleForm)
           util.response(res, this)
           await util.sleep(500)
           this.$refs.loading.close()
           if (res.code === 200) {
             this.$refs.message.open('操作成功', 'success')
             this.show = false
-            this.data[this.index] = util.cloneDeep(this.form)
-            this.$refs.form.reset()
+            this.data.splice(this.index, 1, this.ruleForm)
           } else {
             this.$refs.message.open(res.error, 'error')
           }
@@ -151,7 +160,6 @@ export default{
       this.loading = true
       let res = await api.department.index()
       util.response(res, this)
-      await util.sleep(500)
       this.loading = false
       if (res.code === 200) {
         this.data = res.data

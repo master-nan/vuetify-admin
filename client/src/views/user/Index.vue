@@ -2,11 +2,13 @@
   v-container
     v-layout(row wrap)
       v-flex(mr-10 xs12 sm6 md2)
-        v-text-field(@keyup.enter.native="handleFilter" height="1" label="会员名称" outline clearable v-model="list.name")
+        v-text-field(@keyup.enter.native="handleFilter" height="1" label="昵称" outline clearable v-model="list.nickname")
       v-flex(mr-10 xs12 sm6 md2)
-        v-text-field(@keyup.enter.native="handleFilter" height="1" label="地区" outline clearable v-model="list.area")
+        v-select(@change='handleFilter' height="1" :items="listDep" label="部门" outline item-text="name" item-value="id" clearable v-model="list.d_id")
       v-flex(mr-10 xs12 sm6 md2)
-        v-select(@change='handleFilter' height="1" :items="items" label="会员权限" outline item-text="title" item-value="value" clearable v-model="list.type")
+        v-select(@change='handleFilter' height="1" :items="listPos" label="岗位" outline item-text="name" item-value="id" clearable v-model="list.p_id")
+      v-flex(mr-10 xs12 sm6 md2)
+        v-select(@change='handleFilter' height="1" :items="items" label="状态" outline item-text="title" item-value="value" clearable v-model="list.status")
       v-flex(xs1 sm1 md1)
         v-btn(fab dark color="primary" @click='handleFilter')
           v-icon(dark) search
@@ -24,8 +26,9 @@
             span {{ props.header.text|i18nName('Table',self) }}
         template(slot="items" slot-scope="props")
           td {{ props.index + 1 }}
-          td.text-xs-left {{ props.item.name }}
-          td.text-xs-left {{ props.item.remark }}
+          td.text-xs-left {{ props.item.nickname }}
+          td.text-xs-left {{ props.item.d_name }}
+          td.text-xs-left {{ props.item.p_name }}
           td.text-xs-left
             v-chip(v-if="props.item.status == 1" color="success" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
             v-chip(v-else color="error" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
@@ -60,6 +63,7 @@
 </template>
 <script>
 import util from '@/utils'
+import api from '@/api'
 export default{
   name: 'user-index',
   data () {
@@ -80,34 +84,25 @@ export default{
       ],
       headers: [
         { text: 'Index', sortable: false },
-        { text: 'Name', align: 'left', sortable: false },
-        { text: 'Remark', sortable: false },
+        { text: 'Nickname', align: 'left', sortable: false },
+        { text: 'Department', sortable: false },
+        { text: 'Position', sortable: false },
         { text: 'Status', sortable: false },
         { text: 'Action', sortable: false }
       ],
-      data: [
-        {
-          id: 1,
-          name: 'Frozen Yogurt',
-          remark: 115,
-          status: 1
-        },
-        {
-          id: 2,
-          name: 'Ice cream sandwich',
-          remark: 115,
-          status: 1
-        }
-      ],
+      data: [],
       list: {
-        name: null,
-        area: null,
-        type: null
+        nickname: '',
+        d_id: null,
+        p_id: null,
+        status: null
       },
       items: [
-        { title: '普通会员', value: 1 },
-        { title: '商家', value: 2 }
-      ]
+        { title: '启用', value: 1 },
+        { title: '禁用', value: 2 }
+      ],
+      listPos: [],
+      listDep: []
     }
   },
   methods: {
@@ -120,7 +115,6 @@ export default{
       this.type = 2
       this.index = e.index
       this.form = Object.assign({}, e.item)
-      console.log(this.form)
       this.show = true
     },
     del (e) {
@@ -138,15 +132,11 @@ export default{
       this.show = false
     },
     enable (e) {
-      console.log('e=====', e)
       if (e.item.status === 1) {
         e.item.status = 2
-        console.log('2')
       } else {
         e.item.status = 1
-        console.log('1')
       }
-      console.log(this.data)
     },
     async submit () {
       if (this.$refs.form.validate()) {
@@ -168,11 +158,36 @@ export default{
       if (this.loading) return
       this.getData()
     },
-    getData () {
+    async getData () {
+      this.$refs.loading.open()
+      let res = await api.user.index(this.list)
+      util.response(res, this)
+      this.$refs.loading.close()
+      if (res.code === 200 || res.code === 204) {
+        this.data = res.data
+      }
+    },
+    async getPositions () {
+      let res = await api.position.index({'status': 1})
+      util.response(res, this)
+      if (res.code === 200) {
+        this.listPos = res.data
+      }
+    },
+    async getDepartments () {
+      let res = await api.department.index({'status': 1})
+      util.response(res, this)
+      if (res.code === 200) {
+        this.listDep = res.data
+      }
     }
   },
-  created () {
+  mounted () {
     this.getData()
+  },
+  created () {
+    this.getPositions()
+    this.getDepartments()
   }
 }
 </script>

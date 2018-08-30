@@ -13,7 +13,7 @@ class AdminUser extends Comm
     public function index()
     {
         if (!$this->checkRule()) {
-            return msg(102, null, '您没有权限操作');
+            return msg(401, null, '您没有权限操作');
         }
         $arr = [];
         if (isset($this->param['data'])) {
@@ -25,11 +25,11 @@ class AdminUser extends Comm
             }
         }
         $ret = $this->model->getUsers($arr);
-        // if ($ret) {
-        return msg(200, $ret);
-        // } else {
-        //     return msg(100, null, $this->model->getError());
-        // }
+        if ($ret) {
+            return msg(200, $ret);
+        } else {
+            return msg(204, [], $this->model->getError());
+        }
     }
 
     public function read()
@@ -46,7 +46,7 @@ class AdminUser extends Comm
     public function save()
     {
         if (!$this->checkRule()) {
-            return msg(102, null, '您没有权限操作');
+            return msg(401, null, '您没有权限操作');
         }
         if ($this->param['password']) {
             $this->param['password'] = md5($this->param['password'].$this->param['username']);
@@ -69,7 +69,7 @@ class AdminUser extends Comm
     public function update()
     {
         if (!$this->checkRule()) {
-            return msg(102, null, '您没有权限操作');
+            return msg(401, null, '您没有权限操作');
         }
         if (isset($this->param['id'])) {
             $id = $this->param['id'];

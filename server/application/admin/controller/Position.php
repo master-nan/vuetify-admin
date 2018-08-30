@@ -24,7 +24,7 @@ class Position extends Comm
         if ($ret) {
             return msg(200, $ret);
         } else {
-            return msg(204, null, $this->model->getError());
+            return msg(204, [], $this->model->getError());
         }
     }
 

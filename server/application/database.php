@@ -19,9 +19,9 @@ return [
     // 用户名
     'username'        => 'root',
     // 密码
-    'password'        => 'dwy12345',
+    'password'        => '123456',
     // 端口
-    'hostport'        => '3308',
+    'hostport'        => '3306',
     // 连接dsn
     'dsn'             => '',
     // 数据库连接参数

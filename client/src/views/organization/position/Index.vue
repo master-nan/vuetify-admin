@@ -135,11 +135,10 @@ export default{
         if (this.type === 1) {
           delete this.ruleForm.id
           let res = await api.position.save(this.ruleForm)
-          await util.sleep()
           this.$refs.loading.close()
           util.response(res, this)
           if (res.code === 200) {
-            this.$refs.message.open('操作成功', 'success')
+            this.$refs.message.open(res.error, 'success')
             this.show = false
             this.ruleForm.id = parseInt(res.data)
             this.data.unshift(this.ruleForm)
@@ -149,10 +148,9 @@ export default{
         } else {
           let res = await api.position.update(this.ruleForm)
           util.response(res, this)
-          await util.sleep(500)
           this.$refs.loading.close()
           if (res.code === 200) {
-            this.$refs.message.open('操作成功', 'success')
+            this.$refs.message.open(res.error, 'success')
             this.show = false
             this.data.splice(this.index, 1, this.ruleForm)
           } else {

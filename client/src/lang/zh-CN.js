@@ -3,6 +3,7 @@ module.exports = {
     Home: '首页',
     User: '用户管理',
     All_User: '所有用户',
+    Add_User: '添加用户',
     Organization: '组织架构',
     Department: '部门管理',
     Position: '岗位管理',

@@ -3,6 +3,7 @@ module.exports = {
     Home: 'Home',
     User: 'User',
     All_User: 'All User',
+    Add_User: 'Add User',
     Organization: 'Organization',
     Department: 'Department',
     Position: 'Position',

@@ -1,6 +1,6 @@
 <template lang="pug">
   v-layout(ref="my-loading" row justify-center)
-      v-dialog(v-model="dialog" fullscreen persistent)
+      v-dialog(v-model="dialog" fullscreen persistent transition="fade-transition")
         v-progress-circular(:size="50" :width="5" color="purple" indeterminate)
         div.back
 </template>

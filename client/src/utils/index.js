@@ -70,6 +70,16 @@ let i18nName = (key = null, title = null, vm) => {
   return title
 }
 
+let returnName = (key, data = {}) => {
+  let name = ''
+  _.forEach(data, function (v, k) {
+    if (v.id === key) {
+      name = v.name
+    }
+  })
+  return name
+}
+
 // 深拷贝
 let cloneDeep = (val) => {
   return Object.assign({}, val)
@@ -83,5 +93,6 @@ export default {
   clearSome,
   setUser,
   i18nName,
-  cloneDeep
+  cloneDeep,
+  returnName
 }

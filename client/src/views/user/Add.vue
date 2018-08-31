@@ -58,15 +58,9 @@ export default {
     },
     clear () {
       this.$refs.form.reset()
-      this.form = {
-        nickname: '',
-        username: '',
-        password: '',
-        p_id: null,
-        d_id: null,
-        rule_id: null,
-        status: true
-      }
+      this.$nextTick(() => {
+        this.form.status = true
+      })
     },
     goback () {
       this.$router.go(-1)

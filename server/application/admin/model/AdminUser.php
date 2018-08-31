@@ -34,7 +34,7 @@ class AdminUser extends Model
                     ->join('department d', 'u.d_id = d.id', 'LEFT')
                     ->join('position p', 'u.p_id = p.id', 'LEFT')
                     ->join('rule r', 'u.rule_id = r.id', 'LEFT')
-                    ->field('u.*,p.name as p_name, d.name as d_name, r.rs')
+                    ->field('u.*,p.name as p_name, d.name as d_name, r.name as r_name, r.rs')
                     ->order('id asc')
                     ->where($data)->select();
         if ($res) {

@@ -49,8 +49,12 @@
       v-card
         v-card-text
           v-form(ref="form" v-model="valid" lazy-validation)
-            v-text-field(v-model="form.name" :rules="nameRules" label="部门名称" required)
-            v-text-field(v-model="form.remark" label="备注" required)
+            v-text-field(v-model="ruleForm.nickname" :rules="[v => !!v || 'Nickname is required']" label="昵称" required)
+            v-text-field(v-model="ruleForm.username" :rules="[v => !!v || 'Username is required']" label="用户名" required disabled)
+            v-text-field(v-model="ruleForm.password" label="密码" type="password")
+            v-select(v-model="ruleForm.p_id" :items="listPos" item-text="name" item-value="id" :rules="[v => !!v || 'Position is required']" label="部门")
+            v-select(v-model="ruleForm.d_id" :items="listDep" item-text="name" item-value="id" :rules="[v => !!v || 'Department is required']" label="岗位")
+            v-select(v-model="ruleForm.rule_id" :items="listRule" item-text="name" item-value="id" :rules="[v => !!v || 'Rule is required']" label="权限")
             v-btn.mt-10.mr-10(@click="cancel" dark)
               v-icon(dark left) mdi-close-circle
               slot {{'Cancel'|i18nName('Button',self)}}
@@ -70,12 +74,19 @@ export default{
     return {
       self: this,
       loading: false,
-      form: {
-        name: null,
-        remark: null,
+      ruleForm: {
+        id: null,
+        nickname: '',
+        username: '',
+        password: '',
+        p_id: null,
+        d_id: null,
+        rule_id: null,
         status: 1
       },
-      type: 1,
+      listPos: [],
+      listDep: [],
+      listRule: [],
       index: 1,
       show: false,
       valid: true,
@@ -100,21 +111,24 @@ export default{
       items: [
         { title: '启用', value: 1 },
         { title: '禁用', value: 2 }
-      ],
-      listPos: [],
-      listDep: []
+      ]
     }
   },
   methods: {
-    add () {
-      this.type = 1
-      this.show = true
-      this.$refs.form.reset()
-    },
     edit (e) {
-      this.type = 2
+      this.$refs.form.reset()
       this.index = e.index
-      this.form = Object.assign({}, e.item)
+      this.ruleForm = {
+        id: e.item.id,
+        nickname: e.item.nickname,
+        username: e.item.username,
+        password: '',
+        p_id: e.item.p_id,
+        d_id: e.item.d_id,
+        rule_id: e.item.rule_id,
+        status: e.item.status
+      }
+      console.log(this.ruleForm)
       this.show = true
     },
     del (e) {
@@ -131,27 +145,44 @@ export default{
     cancel () {
       this.show = false
     },
-    enable (e) {
-      if (e.item.status === 1) {
-        e.item.status = 2
+    async enable (e) {
+      let data = {
+        'id': e.item.id,
+        'status': e.item.status === 1 ? 2 : 1
+      }
+      let res = await api.user.enable(data)
+      util.response(res, this)
+      if (res.code === 200) {
+        e.item.status = data.status
       } else {
-        e.item.status = 1
+        this.$refs.message.open(res.error, 'error')
       }
     },
     async submit () {
       if (this.$refs.form.validate()) {
-        this.$refs.loading.open()
-        await util.sleep()
-        this.$refs.loading.close()
-        this.show = false
-        this.$refs.message.open('操作成功', 'success')
-        if (this.type === 1) {
-          this.data.unshift(this.form)
-        } else {
-          // let a = Object.assign({}, this.form)
-          console.log(this.form)
-          this.data.splice(this.index, 1, this.form)
-        }
+        // this.$refs.loading.open()
+        console.log(this.ruleForm)
+        // let res = await api.user.update(this.ruleForm)
+        // util.response(res, this)
+        // this.$refs.loading.close()
+        // if (res.code === 200) {
+        //   this.$refs.message.open('操作成功', 'success')
+        //   this.show = false
+        //   this.ruleForm.status = this.data[this.index].status
+        //   this.ruleForm.last_login_at = this.data[this.index].last_login_at
+        //   this.ruleForm.last_logout_at = this.data[this.index].last_logout_at
+        //   this.ruleForm.create_at = this.data[this.index].create_at
+        //   this.ruleForm.d_name = util.returnName(this.ruleForm.d_id, this.listDep)
+        //   this.ruleForm.p_name = util.returnName(this.ruleForm.p_id, this.listPos)
+        //   this.ruleForm.r_name = util.returnName(this.ruleForm.rule_id, this.listRule)
+        //   this.data.splice(this.index, 1, this.ruleForm)
+        //   console.log(this.ruleForm)
+        //   this.$nextTick(() => {
+        //     this.$refs.form.reset()
+        //   })
+        // } else {
+        //   this.$refs.message.open(res.error, 'error')
+        // }
       }
     },
     handleFilter () {
@@ -180,6 +211,13 @@ export default{
       if (res.code === 200) {
         this.listDep = res.data
       }
+    },
+    async getRules () {
+      let res = await api.rule.index({'status': 1})
+      util.response(res, this)
+      if (res.code === 200) {
+        this.listRule = res.data
+      }
     }
   },
   mounted () {
@@ -188,6 +226,7 @@ export default{
   created () {
     this.getPositions()
     this.getDepartments()
+    this.getRules()
   }
 }
 </script>

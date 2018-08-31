@@ -77,15 +77,13 @@ class AdminUser extends Comm
         } else {
             return msg(100, null, '参数错误');
         }
+        if ($id == 1) {
+            return msg(100, null, '无法操作管理员账号');
+        }
         if (isset($this->param['password'])) {
             $this->param['password'] = md5($this->param['password'].$this->param['username']);
         } else {
             unset($this->param['password']);
-        }
-        if ($this->param['status'] == 'true') {
-            $this->param['status'] = 1;
-        } else {
-            $this->param['status'] = 0;
         }
         $ret = $this->model->updateUser($id, $this->param);
         if ($ret) {

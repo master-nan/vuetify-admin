@@ -40,7 +40,11 @@ module.exports = {
     Status: 'Status',
     Remark: 'Remark',
     Action: 'Action',
-    Index: 'Index'
+    Index: 'Index',
+    Nickname: 'Nickname',
+    Department: 'Department',
+    Position: 'Position',
+    Rule: 'Rule'
   },
   TableTitle: {
     Department: 'Department',

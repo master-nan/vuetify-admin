@@ -40,7 +40,11 @@ module.exports = {
     Status: '状态',
     Remark: '备注',
     Action: '操作',
-    Index: '序号'
+    Index: '序号',
+    Nickname: '昵称',
+    Department: '部门',
+    Position: '岗位',
+    Rule: '权限'
   },
   TableTitle: {
     Department: '部门',

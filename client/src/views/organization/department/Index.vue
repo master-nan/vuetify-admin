@@ -130,7 +130,6 @@ export default{
         if (this.type === 1) {
           delete this.ruleForm.id
           let res = await api.department.save(this.ruleForm)
-          await util.sleep()
           this.$refs.loading.close()
           util.response(res, this)
           if (res.code === 200) {
@@ -144,7 +143,6 @@ export default{
         } else {
           let res = await api.department.update(this.ruleForm)
           util.response(res, this)
-          await util.sleep(500)
           this.$refs.loading.close()
           if (res.code === 200) {
             this.$refs.message.open('操作成功', 'success')

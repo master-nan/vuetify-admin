@@ -51,13 +51,6 @@ export const currentRouter = [
         meta: { title: 'All_User', icon: 'mdi-account-group' }
       },
       {
-        path: 'edit/:id(\\d+)',
-        component: () => import('@/views/user/Edit.vue'),
-        name: 'edit-user',
-        meta: { title: 'Edit_User', icon: 'edit' },
-        hidden: true
-      },
-      {
         path: 'add',
         component: () => import('@/views/user/Add.vue'),
         name: 'add-user',

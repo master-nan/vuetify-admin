@@ -111,24 +111,15 @@ export default{
       items: [
         { title: '启用', value: 1 },
         { title: '禁用', value: 2 }
-      ]
+      ],
+      item: []
     }
   },
   methods: {
     edit (e) {
-      this.$refs.form.reset()
       this.index = e.index
-      this.ruleForm = {
-        id: e.item.id,
-        nickname: e.item.nickname,
-        username: e.item.username,
-        password: '',
-        p_id: e.item.p_id,
-        d_id: e.item.d_id,
-        rule_id: e.item.rule_id,
-        status: e.item.status
-      }
-      console.log(this.ruleForm)
+      this.ruleForm = util.cloneDeep(e.item)
+      this.ruleForm.password = ''
       this.show = true
     },
     del (e) {
@@ -160,29 +151,24 @@ export default{
     },
     async submit () {
       if (this.$refs.form.validate()) {
-        // this.$refs.loading.open()
-        console.log(this.ruleForm)
-        // let res = await api.user.update(this.ruleForm)
-        // util.response(res, this)
-        // this.$refs.loading.close()
-        // if (res.code === 200) {
-        //   this.$refs.message.open('操作成功', 'success')
-        //   this.show = false
-        //   this.ruleForm.status = this.data[this.index].status
-        //   this.ruleForm.last_login_at = this.data[this.index].last_login_at
-        //   this.ruleForm.last_logout_at = this.data[this.index].last_logout_at
-        //   this.ruleForm.create_at = this.data[this.index].create_at
-        //   this.ruleForm.d_name = util.returnName(this.ruleForm.d_id, this.listDep)
-        //   this.ruleForm.p_name = util.returnName(this.ruleForm.p_id, this.listPos)
-        //   this.ruleForm.r_name = util.returnName(this.ruleForm.rule_id, this.listRule)
-        //   this.data.splice(this.index, 1, this.ruleForm)
-        //   console.log(this.ruleForm)
-        //   this.$nextTick(() => {
-        //     this.$refs.form.reset()
-        //   })
-        // } else {
-        //   this.$refs.message.open(res.error, 'error')
-        // }
+        this.$refs.loading.open()
+        let res = await api.user.update(this.ruleForm)
+        util.response(res, this)
+        this.$refs.loading.close()
+        if (res.code === 200) {
+          this.$refs.message.open('操作成功', 'success')
+          this.show = false
+          this.ruleForm.status = this.data[this.index].status
+          this.ruleForm.last_login_at = this.data[this.index].last_login_at
+          this.ruleForm.last_logout_at = this.data[this.index].last_logout_at
+          this.ruleForm.create_at = this.data[this.index].create_at
+          this.ruleForm.d_name = util.returnName(this.ruleForm.d_id, this.listDep)
+          this.ruleForm.p_name = util.returnName(this.ruleForm.p_id, this.listPos)
+          this.ruleForm.r_name = util.returnName(this.ruleForm.rule_id, this.listRule)
+          this.data.splice(this.index, 1, this.ruleForm)
+        } else {
+          this.$refs.message.open(res.error, 'error')
+        }
       }
     },
     handleFilter () {
@@ -190,10 +176,10 @@ export default{
       this.getData()
     },
     async getData () {
-      this.$refs.loading.open()
+      this.loading = true
       let res = await api.user.index(this.list)
       util.response(res, this)
-      this.$refs.loading.close()
+      this.loading = false
       if (res.code === 200 || res.code === 204) {
         this.data = res.data
       }

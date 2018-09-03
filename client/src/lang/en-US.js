@@ -44,7 +44,8 @@ module.exports = {
     Nickname: 'Nickname',
     Department: 'Department',
     Position: 'Position',
-    Rule: 'Rule'
+    Rule: 'Rule',
+    Rs: 'Menu ID'
   },
   TableTitle: {
     Department: 'Department',

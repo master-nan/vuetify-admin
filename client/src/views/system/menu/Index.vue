@@ -7,7 +7,7 @@
       div
         v-btn.info.z-index-1(fab absolute top right dark @click.stop="add")
           v-icon add
-      v-data-table.elevation-1(:loading="false" :headers="headers" :items="data" hide-actions :total-items="30")
+      v-data-table.elevation-1(:loading="loading" :headers="headers" :items="data" hide-actions :total-items="30")
         template(slot="headerCell" slot-scope="props")
           v-tooltip(bottom)
             span(slot="activator") {{ props.header.text }}

@@ -44,7 +44,8 @@ module.exports = {
     Nickname: '昵称',
     Department: '部门',
     Position: '岗位',
-    Rule: '权限'
+    Rule: '权限',
+    Rs: '菜单ID'
   },
   TableTitle: {
     Department: '部门',

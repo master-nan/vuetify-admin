@@ -76,17 +76,7 @@ export default{
       { text: 'Iron (%)', value: 'iron', sortable: false },
       { text: 'Action', value: 'iron', sortable: false }
     ],
-    desserts: [
-      {
-        value: false,
-        name: 'Frozen Yogurt',
-        calories: 159,
-        fat: 6.0,
-        carbs: 24,
-        protein: 4.0,
-        iron: '1%'
-      }
-    ]
+    desserts: []
   }),
   computed: {
     pages () {

@@ -1,6 +1,6 @@
 <template lang="pug">
   v-content
-    v-navigation-drawer(persistent :mini-variant="miniVariant" :clipped="clipped" v-model="drawer" enable-resize-watcher fixed app)
+    v-navigation-drawer(:mini-variant="miniVariant" :clipped="clipped" v-model="drawer" fixed app)
       div.pa-4.text-xs-center
         div.display-1.py-4(style="color:#1565C0") Walnutech
         div

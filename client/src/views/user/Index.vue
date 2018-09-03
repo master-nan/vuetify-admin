@@ -52,8 +52,8 @@
             v-text-field(v-model="ruleForm.nickname" :rules="[v => !!v || 'Nickname is required']" label="昵称" required)
             v-text-field(v-model="ruleForm.username" :rules="[v => !!v || 'Username is required']" label="用户名" required disabled)
             v-text-field(v-model="ruleForm.password" label="密码" type="password")
-            v-select(v-model="ruleForm.p_id" :items="listPos" item-text="name" item-value="id" :rules="[v => !!v || 'Position is required']" label="部门")
-            v-select(v-model="ruleForm.d_id" :items="listDep" item-text="name" item-value="id" :rules="[v => !!v || 'Department is required']" label="岗位")
+            v-select(v-model="ruleForm.d_id" :items="listDep" item-text="name" item-value="id" :rules="[v => !!v || 'Department is required']" label="部门")
+            v-select(v-model="ruleForm.p_id" :items="listPos" item-text="name" item-value="id" :rules="[v => !!v || 'Position is required']" label="岗位")
             v-select(v-model="ruleForm.rule_id" :items="listRule" item-text="name" item-value="id" :rules="[v => !!v || 'Rule is required']" label="权限")
             v-btn.mt-10.mr-10(@click="cancel" dark)
               v-icon(dark left) mdi-close-circle
@@ -158,14 +158,10 @@ export default{
         if (res.code === 200) {
           this.$refs.message.open('操作成功', 'success')
           this.show = false
-          this.ruleForm.status = this.data[this.index].status
-          this.ruleForm.last_login_at = this.data[this.index].last_login_at
-          this.ruleForm.last_logout_at = this.data[this.index].last_logout_at
-          this.ruleForm.create_at = this.data[this.index].create_at
-          this.ruleForm.d_name = util.returnName(this.ruleForm.d_id, this.listDep)
-          this.ruleForm.p_name = util.returnName(this.ruleForm.p_id, this.listPos)
-          this.ruleForm.r_name = util.returnName(this.ruleForm.rule_id, this.listRule)
-          this.data.splice(this.index, 1, this.ruleForm)
+          this.getData()
+          this.$nextTick(() => {
+            this.$refs.form.reset()
+          })
         } else {
           this.$refs.message.open(res.error, 'error')
         }

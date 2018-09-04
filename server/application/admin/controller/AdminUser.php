@@ -16,17 +16,44 @@ class AdminUser extends Comm
             return msg(401, null, '您没有权限操作');
         }
         $arr = [];
+        $page = 1;
+        $len = 15;
         if (isset($this->param['data'])) {
             $data = json_decode($this->param['data'], true);
             foreach ($data as $key => $value) {
+                if ($key == 'page') {
+                    $page = $value;
+                    unset($data[$key]);
+                    continue;
+                }
+                if ($key == 'len') {
+                    $len = $value;
+                    unset($data[$key]);
+                    continue;
+                }
                 if ($value != '' || $value != null) {
                     $arr['u.'.$key] = $value;
+                    if ($key == 'nickname') {
+                        $arr['u.'.$key] = array('like','%'.$value.'%');
+                        $data[$key] = array('like','%'.$value.'%');
+                    } else {
+                        $arr['u.'.$key] = $value;
+                    }
+                }
+                if ($value == '' || $value == null) {
+                    unset($data[$key]);
                 }
             }
+        } else {
+            $data = [];
         }
-        $ret = $this->model->getUsers($arr);
+        $count = $this->model->count($data);
+        if ($page > ceil($count / $len)) {
+            $page = ceil($count / $len);
+        }
+        $ret = $this->model->getUsers($arr, $page, $len);
         if ($ret) {
-            return msg(200, $ret);
+            return msg(200, $ret, null, $count);
         } else {
             return msg(204, [], $this->model->getError());
         }

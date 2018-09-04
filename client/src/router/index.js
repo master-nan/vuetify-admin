@@ -104,6 +104,13 @@ export const currentRouter = [
         component: () => import('@/views/system/rule/Index.vue'),
         name: 'rule',
         meta: { title: 'Rule', icon: 'mdi-account-key' }
+      },
+      {
+        path: 'rule/add',
+        component: () => import('@/views/system/rule/Add.vue'),
+        name: 'addRule',
+        meta: { title: 'addRule' },
+        hidden: true
       }
     ]
   }

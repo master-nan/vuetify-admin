@@ -14,26 +14,19 @@
         div
           v-btn.green(fab absolute top right dark)
             v-icon add
-        v-data-table(:loading="false" :headers="headers" :items="desserts" hide-actions class="elevation-1" :total-items="30")
-          template(slot="headerCell" slot-scope="props")
-            v-tooltip(bottom)
-              span(slot="activator") {{ props.header.text }}
-              span {{ props.header.text }}
-          template(slot="items" slot-scope="props")
-            td {{ props.index + 1 }}
-            td.text-xs-left {{ props.item.name }}
-            td.text-xs-left {{ props.item.calories }}
-            td.text-xs-left {{ props.item.fat }}
-            td.text-xs-left {{ props.item.carbs }}
-            td.text-xs-left {{ props.item.protein }}
-            td.text-xs-left {{ props.item.iron }}
-            td.justify-left
-              v-btn.mr-10(fab small color="cyan" dark @click="edit(props)")
-                v-icon edit
-              v-btn(fab small color="error" dark @click="del(props)")
-                v-icon delete
-          template(slot="no-data")
-            v-alert(:value="true" color="error" icon="warning") Sorry, no data!
+        <v-data-table :headers="headers" :items="data" hide-actions class="elevation-1">
+          <template slot="items" slot-scope="props">
+            <td>{{ props.item.name }}</td>
+            <td class="text-xs-right">{{ props.item.calories }}</td>
+            <td class="text-xs-right">{{ props.item.fat }}</td>
+            <td class="text-xs-right">{{ props.item.carbs }}</td>
+            <td class="text-xs-right">{{ props.item.protein }}</td>
+            <td class="text-xs-right">{{ props.item.iron }}</td>
+          </template>
+          <template slot="no-data">
+            <v-alert :value="true" color="error" icon="warning">Sorry, nothing to display here :(</v-alert>
+          </template>
+        </v-data-table>
         div.text-xs-center.pt-3
           v-pagination(v-model="list.page" :length="pages" :total-visible="5")
           v-flex(xs12 sm12 md12 pt-3) 共{{count}}条&nbsp;&nbsp;&nbsp;&nbsp;前往&nbsp;&nbsp;

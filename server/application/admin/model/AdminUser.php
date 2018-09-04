@@ -28,15 +28,17 @@ class AdminUser extends Model
         }
     }
 
-    public function getUsers($data = [])
+    public function getUsers($data = [], $page, $len)
     {
         $res = $this->alias('u')
                     ->join('department d', 'u.d_id = d.id', 'LEFT')
                     ->join('position p', 'u.p_id = p.id', 'LEFT')
                     ->join('rule r', 'u.rule_id = r.id', 'LEFT')
                     ->field('u.id, u.username, u.nickname, u.last_login_at, u.last_logout_at, u.d_id, u.p_id,u.rule_id, u.status, p.name as p_name, d.name as d_name, r.name as r_name, r.rs')
+                    ->page($page, $len)
+                    ->where($data)
                     ->order('id asc')
-                    ->where($data)->select();
+                    ->select();
         if ($res) {
             $res = $res->toArray();
         }
@@ -86,5 +88,11 @@ class AdminUser extends Model
             $this->error = '更新失败';
             return false;
         }
+    }
+
+    public function count($data = [])
+    {
+        $ret = $this->where($data)->count();
+        return $ret;
     }
 }

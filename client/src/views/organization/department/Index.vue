@@ -7,7 +7,7 @@
       div
         v-btn.info.z-index-1(fab absolute top right dark @click.stop="add")
           v-icon add
-      v-data-table.elevation-1(:loading="loading" :headers="headers" :items="data" hide-actions :total-items="30")
+      v-data-table.elevation-1(:loading="loading" :headers="headers" :items="data" hide-actions)
         template(slot="headerCell" slot-scope="props")
           v-tooltip(bottom)
             span(slot="activator") {{ props.header.text|i18nName('Table',self) }}
@@ -30,7 +30,7 @@
               //- v-icon delete
               slot {{'Enable'|i18nName('Button',self)}}
         template(slot="no-data")
-          v-alert(:value="true" color="error" icon="warning") Sorry, no data!
+          v-alert(:value="true" color="error" icon="warning" outline) Sorry, no data!
     v-dialog(v-model="show", width="500px" persistent)
       v-card
         v-card-text

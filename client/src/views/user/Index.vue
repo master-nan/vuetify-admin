@@ -12,14 +12,14 @@
       v-flex(xs1 sm1 md1)
         v-btn(fab dark color="primary" @click='handleFilter')
           v-icon(dark) search
-    v-card.mt-20
+    v-card.mt-20(:class="{'pb-2':count}")
       div.pl-3
         div.font-weight-medium.display-1.py-4 {{ 'User'|i18nName('TableTitle',self) }}
       v-divider
       div
         v-btn.info.z-index-1(fab absolute top right dark to="add")
           v-icon add
-      v-data-table.elevation-1(:loading="loading" :headers="headers" :items="data" hide-actions :total-items="30")
+      v-data-table.elevation-1(:loading="loading" :headers="headers" :items="data" hide-actions)
         template(slot="headerCell" slot-scope="props")
           v-tooltip(bottom)
             span(slot="activator") {{ props.header.text|i18nName('Table',self) }}
@@ -44,7 +44,12 @@
               //- v-icon delete
               slot {{'Enable'|i18nName('Button',self)}}
         template(slot="no-data")
-          v-alert(:value="true" color="error" icon="warning") Sorry, no data!
+          v-alert(:value="true" color="error" icon="warning" outline) Sorry, no data!
+      div.text-xs-center.pt-3(v-show="count > 0")
+        v-pagination(v-model="list.page" :length="pages" :total-visible="5")
+        v-flex(xs12 sm12 md12 pt-3) 共{{count}}条&nbsp;&nbsp;&nbsp;&nbsp;前往&nbsp;&nbsp;
+          input.input.text-center(v-model="p" @blur="changePage" @keyup.enter="changePage")
+          slot &nbsp;&nbsp;页
     v-dialog(v-model="show", width="500px" persistent)
       v-card
         v-card-text
@@ -106,16 +111,35 @@ export default{
         nickname: '',
         d_id: null,
         p_id: null,
-        status: null
+        status: null,
+        page: 1,
+        len: 15
       },
+      p: 1,
+      count: 0,
       items: [
         { title: '启用', value: 1 },
         { title: '禁用', value: 2 }
-      ],
-      item: []
+      ]
+    }
+  },
+  computed: {
+    pages () {
+      if (this.count == null) return 0
+      return Math.ceil(this.count / this.list.len)
     }
   },
   methods: {
+    changePage () {
+      this.p = parseInt(this.p)
+      if (isNaN(this.p)) {
+        this.p = 1
+      }
+      if (this.p > this.pages) {
+        this.p = this.pages
+      }
+      this.list.page = this.p
+    },
     edit (e) {
       this.index = e.index
       this.ruleForm = util.cloneDeep(e.item)
@@ -178,6 +202,7 @@ export default{
       this.loading = false
       if (res.code === 200 || res.code === 204) {
         this.data = res.data
+        this.count = res.count
       }
     },
     async getPositions () {
@@ -209,6 +234,12 @@ export default{
     this.getPositions()
     this.getDepartments()
     this.getRules()
+  },
+  watch: {
+    'list.page' (val) {
+      this.p = val
+      this.getData()
+    }
   }
 }
 </script>

@@ -18,8 +18,7 @@
           td.text-xs-left {{ props.item.rs }}
           td.text-xs-left {{ props.item.remark }}
           td.text-xs-left
-            v-chip(v-if="props.item.status == 1" color="success" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
-            v-chip(v-else color="error" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
+            v-chip(:color="props.item.status|statusChipFilter(1)|i18nName('Tag',self)" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
           td.justify-left
             v-btn.my-1.mr-10(fab small color="cyan" dark @click="edit(props)")
               v-icon edit
@@ -33,18 +32,6 @@
               slot {{'Enable'|i18nName('Button',self)}}
         template(slot="no-data")
           v-alert(:value="true" color="error" icon="warning" outline) Sorry, no data!
-    v-dialog(v-model="show" width="500px" persistent)
-      v-card
-        v-card-text
-          v-form(ref="form" v-model="valid" lazy-validation)
-            v-text-field(v-model="form.name" :rules="nameRules" label="权限名称" required)
-            v-text-field(v-model="form.remark" label="备注" required)
-            v-btn.mt-10.mr-10(@click="cancel" dark)
-              v-icon(dark left) mdi-close-circle
-              slot {{'Cancel'|i18nName('Button',self)}}
-            v-btn.mt-10(:disabled="!valid" @click="submit" color="primary")
-              v-icon(dark left) check_circle
-              slot {{'Submit'|i18nName('Button',self)}}
     MyLoading(ref="loading")
     MyMessage(ref="message")
     MyComfirm(ref="comfirm")
@@ -64,13 +51,7 @@ export default{
         status: 1,
         rs: null
       },
-      type: 1,
-      index: 1,
-      show: false,
       valid: true,
-      nameRules: [
-        v => !!v || 'Name is required'
-      ],
       headers: [
         { text: 'Index', sortable: false },
         { text: 'Name', sortable: false },
@@ -87,10 +68,7 @@ export default{
       util.toRouter('addRule', this)
     },
     edit (e) {
-      this.type = 2
-      this.index = e.index
-      this.form = util.cloneDeep(e.item)
-      this.show = true
+      util.toRouter('editRule', this, {'id': e.item.id})
     },
     del (e) {
       let s = this
@@ -103,17 +81,6 @@ export default{
           s.$refs.comfirm.close()
         })
     },
-    cancel () {
-      this.show = false
-    },
-    handleChange () {
-      this.keys = this.$refs.tree.getCheckedKeys()
-      console.log(this.keys)
-      if (this.$refs.tree.getCheckedKeys().length) {
-        this.form.rs = this.keys.join(',')
-      }
-      console.log(this.form.rs)
-    },
     async enable (e) {
       let data = {
         'id': e.item.id,
@@ -125,28 +92,6 @@ export default{
         e.item.status = data.status
       } else {
         this.$refs.message.open(res.error, 'error')
-      }
-    },
-    async submit () {
-      if (this.$refs.form.validate()) {
-        this.$refs.loading.open()
-        await util.sleep()
-        this.$refs.loading.close()
-        this.show = false
-        this.$refs.message.open('操作成功', 'success')
-        if (this.type === 1) {
-          let d = [
-            {
-              name: this.form.name,
-              remark: this.form.remark,
-              status: this.form.status
-            }
-          ]
-          this.data = d.concat(this.data)
-        } else {
-          // this.data[this.index] = util.cloneDeep(this.form)
-        }
-        this.$refs.form.reset()
       }
     },
     async getData () {

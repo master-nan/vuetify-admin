@@ -111,6 +111,13 @@ export const currentRouter = [
         name: 'addRule',
         meta: { title: 'addRule' },
         hidden: true
+      },
+      {
+        path: 'rule/edit/:id',
+        component: () => import('@/views/system/rule/Edit.vue'),
+        name: 'editRule',
+        meta: { title: 'editRule' },
+        hidden: true
       }
     ]
   }

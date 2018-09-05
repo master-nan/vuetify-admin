@@ -66,7 +66,7 @@ export default {
           this.$refs.message.open('登录成功', 'success')
           sessionStorage.setItem('user', JSON.stringify(res.data.user))
           sessionStorage.setItem('token', res.data.token)
-          this.$router.push('/index')
+          util.toRouter('index', this)
         } else {
           this.$refs.message.open(res.error, 'error')
         }

@@ -33,7 +33,9 @@ module.exports = {
   },
   Tag: {
     Enabled: '启用',
-    Disabled: '禁用'
+    Disabled: '禁用',
+    Show: '显示',
+    Hidden: '隐藏'
   },
   Table: {
     Name: '名称',
@@ -45,7 +47,13 @@ module.exports = {
     Department: '部门',
     Position: '岗位',
     Rule: '权限',
-    Rs: '菜单ID'
+    Rs: '菜单ID',
+    Title: '标题',
+    Component: '构成组件',
+    Path: '路径',
+    Redirect: '重定向',
+    Show: '完整子菜单',
+    Hidden: '左侧状态'
   },
   TableTitle: {
     Department: '部门',

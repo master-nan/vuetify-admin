@@ -17,8 +17,7 @@
           td.text-xs-left {{ props.item.name }}
           td.text-xs-left {{ props.item.remark }}
           td.text-xs-left
-            v-chip(v-if="props.item.status == 1" color="success" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
-            v-chip(v-else color="error" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
+            v-chip(:color="props.item.status|statusChipFilter(1)|i18nName('Tag',self)" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
           td.justify-left
             v-btn.my-1.mr-10(fab small color="cyan" dark @click="edit(props)")
               v-icon edit
@@ -32,7 +31,7 @@
               slot {{'Enable'|i18nName('Button',self)}}
         template(slot="no-data")
           v-alert(:value="true" color="error" icon="warning" outline) Sorry, no data!
-    v-dialog(v-model="show", width="500px" persistent)
+    v-dialog(v-model="show" width="500px" persistent)
       v-card
         v-card-text
           v-form(ref="form" v-model="valid" lazy-validation)
@@ -71,7 +70,7 @@ export default{
       ],
       headers: [
         { text: 'Index', sortable: false },
-        { text: 'Name', align: 'left', sortable: false },
+        { text: 'Name', sortable: false },
         { text: 'Remark', sortable: false },
         { text: 'Status', sortable: false },
         { text: 'Action', sortable: false }

@@ -10,15 +10,21 @@
       v-data-table.elevation-1(:loading="loading" :headers="headers" :items="data" hide-actions :total-items="30")
         template(slot="headerCell" slot-scope="props")
           v-tooltip(bottom)
-            span(slot="activator") {{ props.header.text }}
-            span {{ props.header.text }}
+            span(slot="activator") {{ props.header.text|i18nName('Table',self) }}
+            span {{ props.header.text|i18nName('Table',self) }}
         template(slot="items" slot-scope="props")
           td {{ props.index + 1 }}
           td.text-xs-left {{ props.item.name }}
-          td.text-xs-left {{ props.item.remark }}
+          td.text-xs-left {{ props.item.title }}
+          td.text-xs-left {{ props.item.component }}
+          td.text-xs-left {{ props.item.path }}
+          td.text-xs-left {{ props.item.redirect }}
           td.text-xs-left
-            v-chip(v-if="props.item.status == 1" color="success" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
-            v-chip(v-else color="error" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
+            v-chip(:color="props.item.show|statusChipFilter(2)|i18nName('Tag',self)" label outline) {{props.item.show|statusFilter(2)|i18nName('Tag',self)}}
+          td.text-xs-left
+            v-chip(:color="props.item.hidden|statusChipFilter(3)|i18nName('Tag',self)" label outline) {{props.item.hidden|statusFilter(3)|i18nName('Tag',self)}}
+          td.text-xs-left
+            v-chip(:color="props.item.status|statusChipFilter(1)|i18nName('Tag',self)" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
           td.justify-left
             v-btn.my-1.mr-10(fab small color="cyan" dark @click="edit(props)")
               v-icon edit
@@ -32,7 +38,7 @@
               slot {{'Enable'|i18nName('Button',self)}}
         template(slot="no-data")
           v-alert(:value="true" color="error" icon="warning") Sorry, no data!
-    v-dialog(v-model="show", width="500px" persistent)
+    v-dialog(v-model="show" width="500px" persistent)
       v-card
         v-card-text
           v-form(ref="form" v-model="valid" lazy-validation)
@@ -50,6 +56,7 @@
 </template>
 <script>
 import util from '@/utils'
+import api from '@/api'
 export default{
   name: 'menu-index',
   data () {
@@ -70,31 +77,17 @@ export default{
       ],
       headers: [
         { text: 'Index', sortable: false },
-        { text: 'Name', align: 'left', sortable: false },
-        { text: 'Remark', sortable: false },
+        { text: 'Name', sortable: false },
+        { text: 'Title', sortable: false },
+        { text: 'Component', sortable: false },
+        { text: 'Path', sortable: false },
+        { text: 'Redirect', sortable: false },
+        { text: 'Show', sortable: false },
+        { text: 'Hidden', sortable: false },
         { text: 'Status', sortable: false },
         { text: 'Action', sortable: false }
       ],
-      data: [
-        {
-          id: 1,
-          name: 'Frozen Yogurt',
-          remark: 115,
-          status: 1
-        },
-        {
-          id: 2,
-          name: 'Ice cream sandwich',
-          remark: 115,
-          status: 1
-        },
-        {
-          id: 3,
-          name: 'Eclair',
-          remark: 115,
-          status: 1
-        }
-      ]
+      data: []
     }
   },
   methods: {
@@ -122,11 +115,17 @@ export default{
     cancel () {
       this.show = false
     },
-    enable (e) {
-      if (e.item.status === 1) {
-        e.item.status = 2
+    async enable (e) {
+      let data = {
+        'id': e.item.id,
+        'status': e.item.status === 1 ? 2 : 1
+      }
+      let res = await api.menu.enable(data)
+      util.response(res, this)
+      if (res.code === 200) {
+        e.item.status = data.status
       } else {
-        e.item.status = 1
+        this.$refs.message.open(res.error, 'error')
       }
     },
     async submit () {
@@ -151,7 +150,14 @@ export default{
         this.$refs.form.reset()
       }
     },
-    getData () {
+    async getData () {
+      this.loading = true
+      let res = await api.menu.index()
+      util.response(res, this)
+      this.loading = false
+      if (res.code === 200) {
+        this.data = res.data
+      }
     }
   },
   created () {

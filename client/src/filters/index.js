@@ -28,6 +28,49 @@ Vue.filter('statusFilter', function (val, type = 1) {
         title = 'Disabled'
       }
       break
+    case 2:
+      if (val === 1) {
+        title = 'Show'
+      } else {
+        title = 'Hidden'
+      }
+      break
+    case 3:
+      if (val === 1) {
+        title = 'Hidden'
+      } else {
+        title = 'Show'
+      }
+      break
+    default:
+  }
+  return title
+})
+
+Vue.filter('statusChipFilter', function (val, type = 1) {
+  let title = 'success'
+  switch (type) {
+    case 1:
+      if (val === 1) {
+        title = 'success'
+      } else {
+        title = 'error'
+      }
+      break
+    case 2:
+      if (val === 1) {
+        title = 'deep-purple'
+      } else {
+        title = 'warning'
+      }
+      break
+    case 3:
+      if (val === 1) {
+        title = 'info'
+      } else {
+        title = 'orange'
+      }
+      break
     default:
   }
   return title

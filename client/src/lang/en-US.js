@@ -33,7 +33,9 @@ module.exports = {
   },
   Tag: {
     Enabled: 'Enabled',
-    Disabled: 'Disabled'
+    Disabled: 'Disabled',
+    Show: 'Show',
+    Hidden: 'Hidden'
   },
   Table: {
     Name: 'Name',
@@ -45,7 +47,13 @@ module.exports = {
     Department: 'Department',
     Position: 'Position',
     Rule: 'Rule',
-    Rs: 'Menu ID'
+    Rs: 'Menu ID',
+    Title: 'Title',
+    Component: 'Component',
+    Path: 'Path',
+    Redirect: 'Redirect',
+    Show: 'Full menu',
+    Hidden: 'Left Status'
   },
   TableTitle: {
     Department: 'Department',

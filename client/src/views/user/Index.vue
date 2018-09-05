@@ -30,8 +30,7 @@
           td.text-xs-left {{ props.item.d_name }}
           td.text-xs-left {{ props.item.p_name }}
           td.text-xs-left
-            v-chip(v-if="props.item.status == 1" color="success" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
-            v-chip(v-else color="error" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
+            v-chip(:color="props.item.status|statusChipFilter(1)|i18nName('Tag',self)" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
           td.justify-left
             v-btn.my-1.mr-10(fab small color="cyan" dark @click="edit(props)")
               v-icon edit
@@ -47,10 +46,10 @@
           v-alert(:value="true" color="error" icon="warning" outline) Sorry, no data!
       div.text-xs-center.pt-3(v-show="count > 0")
         v-pagination(v-model="list.page" :length="pages" :total-visible="5")
-        v-flex(xs12 sm12 md12 pt-3) 共{{count}}条&nbsp;&nbsp;&nbsp;&nbsp;前往&nbsp;&nbsp;
+        v-flex(xs12 sm12 md12 pt-3) 共&nbsp;{{count}}&nbsp;条&nbsp;&nbsp;&nbsp;&nbsp;前往&nbsp;&nbsp;
           input.input.text-center(v-model="p" @blur="changePage" @keyup.enter="changePage")
           slot &nbsp;&nbsp;页
-    v-dialog(v-model="show", width="500px" persistent)
+    v-dialog(v-model="show" width="500px" persistent)
       v-card
         v-card-text
           v-form(ref="form" v-model="valid" lazy-validation)

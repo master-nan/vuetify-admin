@@ -9,26 +9,26 @@
         v-text-field(v-model="form.remark" :rules="[v => !!v || 'Remark is required']" label="备注" required)
         v-list.mt-3.menu-list(two-line)
           template(v-for="item in data")
-            v-list-tile(@click="")
+            v-list-tile(@click="check(item)")
               v-list-tile-action
                 v-checkbox(v-model="item.checked" color="success" :key="item.id")
-              v-list-tile-content(@click.prevent="check(item)")
+              v-list-tile-content()
                 v-list-tile-title {{item.title}}
                 v-list-tile-sub-title {{item.name}}
-            div.ml-3
+            div.pl-4
               template(v-for="childItem in item.children")
-                v-list-tile(@click="")
+                v-list-tile(@click="check(childItem)")
                   v-list-tile-action
                     v-checkbox(v-model="childItem.checked" color="success" :key="childItem.id")
-                  v-list-tile-content(@click.prevent="check(childItem)")
+                  v-list-tile-content
                     v-list-tile-title {{childItem.title}}
                     v-list-tile-sub-title {{childItem.name}}
-                div.ml-5
+                div.ml-10.ml-5
                   template(v-for="child in childItem.children")
-                    v-list-tile(@click="")
+                    v-list-tile(@click="check(child)")
                       v-list-tile-action
                         v-checkbox(v-model="child.checked" color="success" :key="child.id")
-                      v-list-tile-content(@click.prevent="check(child)")
+                      v-list-tile-content
                         v-list-tile-title {{child.title}}
                         v-list-tile-sub-title {{child.name}}
         v-switch(v-model="form.status" :label="(form.status ? 'Enable' : 'Disable') | i18nName('Tag',self)" color="info" :value="form.status" hide-details required)
@@ -41,6 +41,7 @@
 <script>
 import util from '@/utils'
 import api from '@/api'
+import _ from 'lodash'
 export default {
   name: 'user-add',
   data () {
@@ -62,23 +63,16 @@ export default {
       if (this.$refs.form.validate()) {
         this.form.rs = this.keys.toString()
         this.$refs.loading.open()
-        let res = await api.rule.save(this.form)
+        let res = await api.rule.update(this.form)
         util.response(res, this)
         this.$refs.loading.close()
         if (res.code === 200) {
           this.$refs.message.open(res.error, 'success')
-          this.clear()
+          util.toRouter('rule', this)
         } else {
           this.$refs.message.open(res.error, 'error')
         }
       }
-    },
-    clear () {
-      this.$refs.form.reset()
-      this.$nextTick(() => {
-        this.form.status = true
-        this.keys = []
-      })
     },
     goback () {
       this.$router.go(-1)
@@ -92,6 +86,7 @@ export default {
         this.keys.push(e.id)
         e.checked = true
       }
+      console.log(this.keys)
     },
     async getData () {
       this.loading = true
@@ -101,10 +96,45 @@ export default {
       if (res.code === 200) {
         this.data = res.data
       }
+    },
+    async getRuleById () {
+      this.form.id = this.$route.params.id ? this.$route.params.id : 0
+      let res = await api.rule.read(this.form.id)
+      util.response(res, this)
+      if (res.code === 200) {
+        this.form = res.data
+        this.form.status = !!res.data.status
+      } else {
+        this.$refs.message.open(res.error, 'error')
+        await util.sleep()
+        util.toRouter('rule', this)
+      }
+      if (this.form.rs) {
+        this.keys = this.form.rs.split(',').map(e => {
+          return parseInt(e)
+        })
+      }
+    },
+    eachItems (item) {
+      let s = this
+      _.forEach(item, function (res) {
+        if (s.keys.indexOf(res.id) > -1) {
+          res.checked = true
+        }
+        if (res.children) {
+          s.eachItems(res.children)
+        }
+      })
     }
   },
   created () {
+    this.getRuleById()
     this.getData()
+  },
+  watch: {
+    'data' (e) {
+      this.eachItems(this.data)
+    }
   }
 }
 </script>

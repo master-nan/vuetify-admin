@@ -10,8 +10,8 @@
       v-data-table.elevation-1(:loading="loading" :headers="headers" :items="data" hide-actions)
         template(slot="headerCell" slot-scope="props")
           v-tooltip(bottom)
-            span(slot="activator") {{ props.header.text }}
-            span {{ props.header.text }}
+            span(slot="activator") {{ props.header.text|i18nName('Table',self) }}
+            span {{ props.header.text|i18nName('Table',self) }}
         template(slot="items" slot-scope="props")
           td {{ props.index + 1 }}
           td.text-xs-left {{ props.item.name }}

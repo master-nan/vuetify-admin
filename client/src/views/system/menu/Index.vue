@@ -13,29 +13,32 @@
             span(slot="activator") {{ props.header.text|i18nName('Table',self) }}
             span {{ props.header.text|i18nName('Table',self) }}
         template(slot="items" slot-scope="props")
-          td {{ props.index + 1 }}
-          td.text-xs-left {{ props.item.name }}
-          td.text-xs-left {{ props.item.title }}
-          td.text-xs-left {{ props.item.component }}
-          td.text-xs-left {{ props.item.path }}
-          td.text-xs-left {{ props.item.redirect }}
-          td.text-xs-left
-            v-chip(:color="props.item.show|statusChipFilter(2)|i18nName('Tag',self)" label outline) {{props.item.show|statusFilter(2)|i18nName('Tag',self)}}
-          td.text-xs-left
-            v-chip(:color="props.item.hidden|statusChipFilter(3)|i18nName('Tag',self)" label outline) {{props.item.hidden|statusFilter(3)|i18nName('Tag',self)}}
-          td.text-xs-left
-            v-chip(:color="props.item.status|statusChipFilter(1)|i18nName('Tag',self)" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
-          td.justify-left
-            v-btn.my-1.mr-10(fab small color="cyan" dark @click="edit(props)")
-              v-icon edit
-            v-btn.my-1.mr-10(fab small color="error" dark @click="del(props)")
-              v-icon delete
-            v-btn.my-1(style="min-width:60px" v-if="props.item.status == 1" small color="warning" @click="enable(props)")
-              //- v-icon delete
-              slot {{'Disable'|i18nName('Button',self)}}
-            v-btn.my-1(style="min-width:60px" v-else small color="success" @click="enable(props)")
-              //- v-icon delete
-              slot {{'Enable'|i18nName('Button',self)}}
+          tr(:class="{'deep-purple lighten-5':props.item.child,'yellow lighten-4':props.item.kid}")
+            td {{ props.item.id }}
+            td.text-xs-left {{ props.item.pid }}
+            td.text-xs-left {{ props.item.name }}
+            td.text-xs-left {{ props.item.title }}
+            td.text-xs-left {{ props.item.component }}
+            td.text-xs-left {{ props.item.path }}
+            td.text-xs-left
+              v-chip(:color="props.item.show|statusChipFilter(2)|i18nName('Tag',self)" label outline) {{props.item.show|statusFilter(2)|i18nName('Tag',self)}}
+            td.text-xs-left
+              v-chip(:color="props.item.hidden|statusChipFilter(3)|i18nName('Tag',self)" label outline) {{props.item.hidden|statusFilter(3)|i18nName('Tag',self)}}
+            td.text-xs-left
+              v-chip(:color="props.item.status|statusChipFilter(1)|i18nName('Tag',self)" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
+            td.justify-left
+              v-btn.my-1.mr-10(fab small color="cyan" dark @click="edit(props)")
+                v-icon edit
+              v-btn.my-1.mr-10(fab small color="error" dark @click="del(props)")
+                v-icon delete
+              v-btn.my-1.mr-10(style="min-width:60px" v-if="props.item.status == 1" small color="warning" @click="enable(props)")
+                slot {{'Disable'|i18nName('Button',self)}}
+              v-btn.my-1.mr-10(style="min-width:60px" v-else small color="success" @click="enable(props)")
+                slot {{'Enable'|i18nName('Button',self)}}
+              template(v-if="props.item.children")
+                v-btn.my-1(fab small color="purple" dark @click="expand(props)")
+                  v-icon(v-if="props.item.expand") mdi-arrow-up-bold
+                  v-icon(v-else) mdi-arrow-down-bold
         template(slot="no-data")
           v-alert(:value="true" color="error" icon="warning") Sorry, no data!
     v-dialog(v-model="show" width="500px" persistent)
@@ -57,6 +60,7 @@
 <script>
 import util from '@/utils'
 import api from '@/api'
+import _ from 'lodash'
 export default{
   name: 'menu-index',
   data () {
@@ -76,12 +80,12 @@ export default{
         v => !!v || 'Name is required'
       ],
       headers: [
-        { text: 'Index', sortable: false },
+        { text: 'ID', sortable: false },
+        { text: 'PID', sortable: false },
         { text: 'Name', sortable: false },
         { text: 'Title', sortable: false },
         { text: 'Component', sortable: false },
         { text: 'Path', sortable: false },
-        { text: 'Redirect', sortable: false },
         { text: 'Show', sortable: false },
         { text: 'Hidden', sortable: false },
         { text: 'Status', sortable: false },
@@ -91,9 +95,30 @@ export default{
     }
   },
   methods: {
+    expand (e) {
+      if (e.item.children) {
+        let index = e.index
+        let children = e.item.children
+        if (e.item.expand) {
+          e.item.expand = false
+          this.data.splice(index + 1, children.length)
+        } else {
+          let s = this
+          _.forEach(children, function (value, key) {
+            if (e.item.pid === 0) {
+              value.child = true
+            } else {
+              value.kid = true
+            }
+            s.data.splice(index + 1 + key, 0, value)
+          })
+          e.item.expand = true
+        }
+      }
+    },
     add () {
       this.type = 1
-      this.show = true
+      util.toRouter('addMenu', this)
     },
     edit (e) {
       this.type = 2

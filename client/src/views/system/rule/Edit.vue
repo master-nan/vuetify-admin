@@ -43,7 +43,7 @@ import util from '@/utils'
 import api from '@/api'
 import _ from 'lodash'
 export default {
-  name: 'user-add',
+  name: 'rule-edit',
   data () {
     return {
       self: this,
@@ -86,7 +86,6 @@ export default {
         this.keys.push(e.id)
         e.checked = true
       }
-      console.log(this.keys)
     },
     async getData () {
       this.loading = true

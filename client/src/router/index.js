@@ -100,6 +100,20 @@ export const currentRouter = [
         meta: { title: 'Menu', icon: 'mdi-format-list-bulleted' }
       },
       {
+        path: 'menu/add',
+        component: () => import('@/views/system/menu/Add.vue'),
+        name: 'addMenu',
+        meta: { title: 'addMenu' },
+        hidden: true
+      },
+      {
+        path: 'menu/edit',
+        component: () => import('@/views/system/menu/Edit.vue'),
+        name: 'editMenu',
+        meta: { title: 'editMenu' },
+        hidden: true
+      },
+      {
         path: 'rule/index',
         component: () => import('@/views/system/rule/Index.vue'),
         name: 'rule',

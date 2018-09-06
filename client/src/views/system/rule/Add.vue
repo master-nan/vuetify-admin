@@ -42,7 +42,7 @@
 import util from '@/utils'
 import api from '@/api'
 export default {
-  name: 'user-add',
+  name: 'rule-add',
   data () {
     return {
       self: this,

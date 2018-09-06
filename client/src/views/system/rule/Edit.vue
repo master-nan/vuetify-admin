@@ -23,7 +23,7 @@
                   v-list-tile-content
                     v-list-tile-title {{childItem.title}}
                     v-list-tile-sub-title {{childItem.name}}
-                div.ml-10.ml-5
+                div.ml-2.ml-5
                   template(v-for="child in childItem.children")
                     v-list-tile(@click="check(child)")
                       v-list-tile-action

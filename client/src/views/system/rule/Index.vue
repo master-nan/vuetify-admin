@@ -1,6 +1,6 @@
 <template lang="pug">
   v-container
-    v-card.mt-20
+    v-card.mt-4
       div.pl-3
         div.font-weight-medium.display-1.py-4 {{ 'Rule'|i18nName('TableTitle',self) }}
       v-divider
@@ -20,9 +20,9 @@
           td.text-xs-left
             v-chip(:color="props.item.status|statusChipFilter(1)|i18nName('Tag',self)" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
           td.justify-left
-            v-btn.my-1.mr-10(fab small color="cyan" dark @click="edit(props)")
+            v-btn.my-1.mr-2(fab small color="cyan" dark @click="edit(props)")
               v-icon edit
-            v-btn.my-1.mr-10(fab small color="error" dark @click="del(props)")
+            v-btn.my-1.mr-2(fab small color="error" dark @click="del(props)")
               v-icon delete
             v-btn.my-1(style="min-width:60px" v-if="props.item.status == 1" small color="warning" @click="enable(props)")
               //- v-icon delete

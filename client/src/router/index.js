@@ -90,7 +90,7 @@ export const currentRouter = [
     name: 'system',
     meta: {
       title: 'System',
-      icon: 'mdi-settings fa-spin'
+      icon: 'mdi-settings'
     },
     children: [
       {

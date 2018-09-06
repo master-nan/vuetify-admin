@@ -1,6 +1,6 @@
 <template lang="pug">
   v-container
-    v-card.mt-20
+    v-card.mt-4
       div.pl-3
         div.font-weight-medium.display-1.py-4 {{ 'Department'|i18nName('TableTitle',self) }}
       v-divider
@@ -19,9 +19,9 @@
           td.text-xs-left
             v-chip(:color="props.item.status|statusChipFilter(1)|i18nName('Tag',self)" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
           td.justify-left
-            v-btn.my-1.mr-10(fab small color="cyan" dark @click="edit(props)")
+            v-btn.my-1.mr-2(fab small color="cyan" dark @click="edit(props)")
               v-icon edit
-            v-btn.my-1.mr-10(fab small color="error" dark @click="del(props)")
+            v-btn.my-1.mr-2(fab small color="error" dark @click="del(props)")
               v-icon delete
             v-btn.my-1(style="min-width:60px" v-if="props.item.status === 1" small color="warning" @click="enable(props)")
               //- v-icon delete
@@ -37,10 +37,10 @@
           v-form(ref="form" v-model="valid" lazy-validation)
             v-text-field(v-model="ruleForm.name" :rules="nameRules" label="部门名称" required)
             v-text-field(v-model="ruleForm.remark" label="备注" required)
-            v-btn.mt-10.mr-10(@click="cancel" dark)
+            v-btn.mt-2.mr-2(@click="cancel" dark)
               v-icon(dark left) mdi-close-circle
               slot {{'Cancel'|i18nName('Button',self)}}
-            v-btn.mt-10(:disabled="!valid" @click="submit" color="primary")
+            v-btn.mt-2(:disabled="!valid" @click="submit" color="primary")
               v-icon(dark left) check_circle
               slot {{'Submit'|i18nName('Button',self)}}
     MyLoading(ref="loading")

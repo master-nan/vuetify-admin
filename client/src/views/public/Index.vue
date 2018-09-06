@@ -1,16 +1,16 @@
 <template lang="pug">
     v-container
       v-layout(row wrap)
-        v-flex(mr-10 xs12 sm6 md2)
+        v-flex(mr-2 xs12 sm6 md2)
           v-text-field(@keyup.enter.native="handleFilter" height="1" label="会员名称" outline clearable v-model="list.name")
-        v-flex(mr-10 xs12 sm6 md2)
+        v-flex(mr-2 xs12 sm6 md2)
           v-text-field(@keyup.enter.native="handleFilter" height="1" label="地区" outline clearable v-model="list.area")
-        v-flex(mr-10 xs12 sm6 md2)
+        v-flex(mr-2 xs12 sm6 md2)
           v-select(@change='handleFilter' height="1" :items="items" label="会员权限" outline item-text="title" item-value="value" clearable v-model="list.type")
         v-flex(xs1 sm1 md1 text-left)
           v-btn(fab dark color="primary" @click='handleFilter')
             v-icon(dark) search
-      v-card.mt-20
+      v-card.mt-4
         div
           v-btn.green(fab absolute top right dark)
             v-icon add

@@ -1,18 +1,18 @@
 <template lang="pug">
   v-container
     v-layout(row wrap)
-      v-flex(mr-10 xs12 sm6 md2)
+      v-flex(mr-2 xs12 sm6 md2)
         v-text-field(@keyup.enter.native="handleFilter" height="1" label="昵称" outline clearable v-model="list.nickname")
-      v-flex(mr-10 xs12 sm6 md2)
+      v-flex(mr-2 xs12 sm6 md2)
         v-select(@change='handleFilter' height="1" :items="listDep" label="部门" outline item-text="name" item-value="id" clearable v-model="list.d_id")
-      v-flex(mr-10 xs12 sm6 md2)
+      v-flex(mr-2 xs12 sm6 md2)
         v-select(@change='handleFilter' height="1" :items="listPos" label="岗位" outline item-text="name" item-value="id" clearable v-model="list.p_id")
-      v-flex(mr-10 xs12 sm6 md2)
+      v-flex(mr-2 xs12 sm6 md2)
         v-select(@change='handleFilter' height="1" :items="items" label="状态" outline item-text="title" item-value="value" clearable v-model="list.status")
       v-flex(xs1 sm1 md1)
         v-btn(fab dark color="primary" @click='handleFilter')
           v-icon(dark) search
-    v-card.mt-20(:class="{'pb-2':count}")
+    v-card.mt-4(:class="{'pb-2':count}")
       div.pl-3
         div.font-weight-medium.display-1.py-4 {{ 'User'|i18nName('TableTitle',self) }}
       v-divider
@@ -32,9 +32,9 @@
           td.text-xs-left
             v-chip(:color="props.item.status|statusChipFilter(1)|i18nName('Tag',self)" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
           td.justify-left
-            v-btn.my-1.mr-10(fab small color="cyan" dark @click="edit(props)")
+            v-btn.my-1.mr-2(fab small color="cyan" dark @click="edit(props)")
               v-icon edit
-            v-btn.my-1.mr-10(fab small color="error" dark @click="del(props)")
+            v-btn.my-1.mr-2(fab small color="error" dark @click="del(props)")
               v-icon delete
             v-btn.my-1(style="min-width:60px" v-if="props.item.status == 1" small color="warning" @click="enable(props)")
               //- v-icon delete
@@ -59,10 +59,10 @@
             v-select(v-model="ruleForm.d_id" :items="listDep" item-text="name" item-value="id" :rules="[v => !!v || 'Department is required']" label="部门")
             v-select(v-model="ruleForm.p_id" :items="listPos" item-text="name" item-value="id" :rules="[v => !!v || 'Position is required']" label="岗位")
             v-select(v-model="ruleForm.rule_id" :items="listRule" item-text="name" item-value="id" :rules="[v => !!v || 'Rule is required']" label="权限")
-            v-btn.mt-10.mr-10(@click="cancel" dark)
+            v-btn.mt-2.mr-2(@click="cancel" dark)
               v-icon(dark left) mdi-close-circle
               slot {{'Cancel'|i18nName('Button',self)}}
-            v-btn.mt-10(:disabled="!valid" @click="submit" color="primary")
+            v-btn.mt-2(:disabled="!valid" @click="submit" color="primary")
               v-icon(dark left) check_circle
               slot {{'Submit'|i18nName('Button',self)}}
     MyLoading(ref="loading")

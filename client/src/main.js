@@ -12,9 +12,6 @@ import './filters'
 import 'babel-polyfill'
 import '@mdi/font/css/materialdesignicons.min.css'
 
-import '@fortawesome/fontawesome-free/css/all.min.css'
-
-import { Tree, Button } from 'element-ui'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
@@ -23,9 +20,6 @@ import './assets/style/index.less'
 import MyLoading from '@/views/components/public/Loading.vue'
 import MyMessage from '@/views/components/public/Message.vue'
 import MyComfirm from '@/views/components/public/Comfirm.vue'
-
-Vue.use(Tree)
-Vue.use(Button)
 
 Vue.use(VueI18n)
 

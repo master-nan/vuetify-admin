@@ -9,7 +9,7 @@
       v-divider
       v-card-actions.pa-2
         v-spacer
-        v-btn.mr-10(@click="no" small)
+        v-btn.mr-2(@click="no" small)
           v-icon(dark small left) mdi-close-circle
           slot {{'No'|i18nName('Button',self)}}
         v-btn(@click="yes" color="primary" small)

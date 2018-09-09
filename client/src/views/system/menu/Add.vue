@@ -7,7 +7,10 @@
       v-form(ref="form" v-model="valid" lazy-validation)
         v-text-field(v-model="form.title" :rules="[v => !!v || 'Name is required']" label="标题" required)
         v-text-field(v-model="form.name" :rules="[v => !!v || 'Name is required']" label="名称" required)
-        v-text-field(v-model="form.pid" :rules="[v => !!v || 'Pid is required']" label="父节点" required)
+        //- v-text-field(v-model="form.pid" :rules="[v => !!v || 'Pid is required']" label="父节点" required)
+        <v-flex xs12>
+          <v-combobox v-model="select" :items="items" item-text="title" item-value="id" chips label="父节点"></v-combobox>
+        </v-flex>
         v-switch(v-model="form.show" :label="`显示完整菜单：${form.show.toString()}`" color="success" hide-details required)
         v-switch(v-model="form.hidden" :label="`左侧隐藏：${form.hidden.toString()}`" color="indigo" hide-details required)
         v-text-field(v-model="form.component" :rules="[v => !!v || 'Remark is required']" label="主体" placeholder="示例：home (客户端components.js中)" required)
@@ -54,6 +57,13 @@ export default {
       data: [],
       sortRules: [
         v => sortRules(v)
+      ],
+      select: {id: 0, title: '根节点'},
+      items: [
+        {id: 0, title: '根节点'},
+        {id: 1, title: '节点一'},
+        {id: 2, title: '节点二'},
+        {id: 3, title: '节点三'}
       ]
     }
   },

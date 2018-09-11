@@ -31,7 +31,6 @@
                       v-list-tile-content
                         v-list-tile-title {{child.title}}
                         v-list-tile-sub-title {{child.name}}
-        v-switch(v-model="form.status" :label="(form.status ? 'Enable' : 'Disable') | i18nName('Tag',self)" color="info" :value="form.status" hide-details required)
         v-btn.mt-4(:disabled="!valid" @click="submit" color="primary")
           v-icon(dark left) check_circle
           slot {{'Submit'|i18nName('Button',self)}}
@@ -51,7 +50,6 @@ export default {
       form: {
         name: null,
         remark: null,
-        status: true,
         rs: null
       },
       data: [],
@@ -102,7 +100,6 @@ export default {
       util.response(res, this)
       if (res.code === 200) {
         this.form = res.data
-        this.form.status = !!res.data.status
       } else {
         this.$refs.message.open(res.error, 'error')
         await util.sleep()

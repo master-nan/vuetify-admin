@@ -7,17 +7,13 @@
       v-form(ref="form" v-model="valid" lazy-validation)
         v-text-field(v-model="form.title" :rules="[v => !!v || 'Name is required']" label="标题" required)
         v-text-field(v-model="form.name" :rules="[v => !!v || 'Name is required']" label="名称" required)
-        //- v-text-field(v-model="form.pid" :rules="[v => !!v || 'Pid is required']" label="父节点" required)
-        <v-flex xs12>
-          <v-combobox v-model="select" :items="items" item-text="title" item-value="id" chips label="父节点"></v-combobox>
-        </v-flex>
+        v-select(:items="items" label="父节点" item-text="title" item-value="id" v-model="form.pid")
         v-switch(v-model="form.show" :label="`显示完整菜单：${form.show.toString()}`" color="success" hide-details required)
         v-switch(v-model="form.hidden" :label="`左侧隐藏：${form.hidden.toString()}`" color="indigo" hide-details required)
         v-text-field(v-model="form.component" :rules="[v => !!v || 'Remark is required']" label="主体" placeholder="示例：home (客户端components.js中)" required)
         v-text-field(v-model="form.path" :rules="[v => !!v || 'Remark is required']" label="访问路径" placeholder="示例：/index (子菜单请去掉/)" required)
         v-text-field(v-model="form.redirect" label="重定向" placeholder="示例：/index (子节点无效)" required)
         v-text-field(v-model="form.sort" label="排序" :rules="sortRules" required type="number")
-        v-switch(v-model="form.status" :label="(form.status ? 'Enable' : 'Disable') | i18nName('Tag',self)" color="info" hide-details required)
         v-btn.mt-4(:disabled="!valid" @click="submit" color="primary")
           v-icon(dark left) check_circle
           slot {{'Submit'|i18nName('Button',self)}}
@@ -51,8 +47,7 @@ export default {
         icon: null,
         op: null,
         redirect: null,
-        sort: 0,
-        status: true
+        sort: 0
       },
       data: [],
       sortRules: [

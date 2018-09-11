@@ -148,8 +148,14 @@ export default{
     del (e) {
       let s = this
       this.$refs.comfirm.show(
-        function () {
-          s.data.splice(e.index, 1)
+        async function () {
+          let res = await api.user.del(e.item.id)
+          util.response(res, this)
+          if (res.code === 200) {
+            s.data.splice(e.index, 1)
+          } else {
+            s.$refs.message.open(res.error, 'error')
+          }
           s.$refs.comfirm.close()
         },
         function () {

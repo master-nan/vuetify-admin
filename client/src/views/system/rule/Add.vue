@@ -31,7 +31,6 @@
                       v-list-tile-content(@click.prevent="check(child)")
                         v-list-tile-title {{child.title}}
                         v-list-tile-sub-title {{child.name}}
-        v-switch(v-model="form.status" :label="(form.status ? 'Enable' : 'Disable') | i18nName('Tag',self)" color="info" :value="form.status" hide-details required)
         v-btn.mt-4(:disabled="!valid" @click="submit" color="primary")
           v-icon(dark left) check_circle
           slot {{'Submit'|i18nName('Button',self)}}
@@ -50,7 +49,6 @@ export default {
       form: {
         name: null,
         remark: null,
-        status: true,
         rs: null
       },
       data: [],

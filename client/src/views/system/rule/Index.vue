@@ -78,6 +78,7 @@ export default{
           util.response(res, this)
           if (res.code === 200) {
             s.data.splice(e.index, 1)
+            s.$refs.message.open(res.error)
           } else {
             s.$refs.message.open(res.error, 'error')
           }

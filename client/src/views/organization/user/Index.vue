@@ -17,7 +17,7 @@
         div.font-weight-medium.display-1.py-4 {{ 'User'|i18nName('TableTitle',self) }}
       v-divider
       div
-        v-btn.info.z-index-1(fab absolute top right dark to="add")
+        v-btn.info.z-index-1(fab absolute top right dark @click.stop="add")
           v-icon add
       v-data-table.elevation-1(:loading="loading" :headers="headers" :items="data" hide-actions)
         template(slot="headerCell" slot-scope="props")
@@ -51,14 +51,15 @@
           slot &nbsp;&nbsp;页
     v-dialog(v-model="show" width="500px" persistent)
       v-card
+        v-card-title.headline.grey.lighten-2(primary-title) {{title}}
         v-card-text
           v-form(ref="form" v-model="valid" lazy-validation)
             v-text-field(v-model="ruleForm.nickname" :rules="[v => !!v || 'Nickname is required']" label="昵称" required)
-            v-text-field(v-model="ruleForm.username" :rules="[v => !!v || 'Username is required']" label="用户名" required disabled)
+            v-text-field(v-model="ruleForm.username" :rules="[v => !!v || 'Username is required']" label="用户名" required :disabled="type != 1")
             v-text-field(v-model="ruleForm.password" label="密码" type="password")
             v-select(v-model="ruleForm.d_id" :items="listDep" item-text="name" item-value="id" :rules="[v => !!v || 'Department is required']" label="部门")
             v-select(v-model="ruleForm.p_id" :items="listPos" item-text="name" item-value="id" :rules="[v => !!v || 'Position is required']" label="岗位")
-            v-select(v-model="ruleForm.rule_id" :items="listRule" item-text="name" item-value="id" :rules="[v => !!v || 'Rule is required']" label="权限")
+            v-select(v-model="ruleForm.r_id" :items="listRule" item-text="name" item-value="id" :rules="[v => !!v || 'Rule is required']" label="权限")
             v-btn.mt-2.mr-2(@click="cancel" dark)
               v-icon(dark left) mdi-close-circle
               slot {{'Cancel'|i18nName('Button',self)}}
@@ -85,8 +86,7 @@ export default{
         password: '',
         p_id: null,
         d_id: null,
-        rule_id: null,
-        status: 1
+        r_id: null
       },
       listPos: [],
       listDep: [],
@@ -114,12 +114,14 @@ export default{
         page: 1,
         len: 15
       },
+      type: 1,
       p: 1,
       count: 0,
       items: [
         { title: '启用', value: 1 },
         { title: '禁用', value: 2 }
-      ]
+      ],
+      title: '添加用户'
     }
   },
   computed: {
@@ -139,8 +141,19 @@ export default{
       }
       this.list.page = this.p
     },
+    add () {
+      this.title = '添加用户'
+      this.type = 1
+      this.show = true
+      this.$nextTick(() => {
+        this.$refs.form.reset()
+        delete this.ruleForm.id
+      })
+    },
     edit (e) {
+      this.title = '编辑用户'
       this.index = e.index
+      this.type = 2
       this.ruleForm = util.cloneDeep(e.item)
       this.ruleForm.password = ''
       this.show = true
@@ -153,6 +166,7 @@ export default{
           util.response(res, this)
           if (res.code === 200) {
             s.data.splice(e.index, 1)
+            s.$refs.message.open(res.error)
           } else {
             s.$refs.message.open(res.error, 'error')
           }
@@ -163,7 +177,10 @@ export default{
         })
     },
     cancel () {
-      this.show = false
+      this.$nextTick(() => {
+        this.$refs.form.reset()
+        this.show = false
+      })
     },
     async enable (e) {
       let data = {
@@ -181,16 +198,21 @@ export default{
     async submit () {
       if (this.$refs.form.validate()) {
         this.$refs.loading.open()
-        let res = await api.user.update(this.ruleForm)
+        let res = null
+        if (this.type === 1) {
+          res = await api.user.save(this.ruleForm)
+        } else {
+          res = await api.user.update(this.ruleForm)
+        }
         util.response(res, this)
         this.$refs.loading.close()
         if (res.code === 200) {
           this.$refs.message.open('操作成功', 'success')
           this.show = false
           this.getData()
-          this.$nextTick(() => {
-            this.$refs.form.reset()
-          })
+          // this.$nextTick(() => {
+          //   this.$refs.form.reset()
+          // })
         } else {
           this.$refs.message.open(res.error, 'error')
         }

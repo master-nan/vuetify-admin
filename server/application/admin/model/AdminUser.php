@@ -33,8 +33,8 @@ class AdminUser extends Model
         $res = $this->alias('u')
                     ->join('department d', 'u.d_id = d.id', 'LEFT')
                     ->join('position p', 'u.p_id = p.id', 'LEFT')
-                    ->join('rule r', 'u.rule_id = r.id', 'LEFT')
-                    ->field('u.id, u.username, u.nickname, u.last_login_at, u.last_logout_at, u.d_id, u.p_id,u.rule_id, u.status, p.name as p_name, d.name as d_name, r.name as r_name, r.rs')
+                    ->join('rule r', 'u.r_id = r.id', 'LEFT')
+                    ->field('u.id, u.username, u.nickname, u.last_login_at, u.last_logout_at, u.d_id, u.p_id,u.r_id, u.status, p.name as p_name, d.name as d_name, r.name as r_name, r.rs')
                     ->page($page, $len)
                     ->where($data)
                     ->order('id asc')
@@ -94,5 +94,21 @@ class AdminUser extends Model
     {
         $ret = $this->where($data)->count();
         return $ret;
+    }
+
+    public function del($id = 0)
+    {
+      try {
+          $res = $this->where('id',$id)->delete();
+          if ($res) {
+              return $res;
+          } else {
+              $this->error = '删除失败';
+              return false;
+          }
+      } catch (\Exception $e) {
+          $this->error = '删除失败';
+          return false;
+      }
     }
 }

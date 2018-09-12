@@ -34,32 +34,6 @@ export const currentRouter = [
     }]
   },
   {
-    path: '/user',
-    component: Home,
-    redirect: '/user/index',
-    show: true,
-    name: 'user',
-    meta: {
-      title: 'User',
-      icon: 'mdi-account-settings'
-    },
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/user/Index.vue'),
-        name: 'all-user',
-        meta: { title: 'All_User', icon: 'mdi-account-group' }
-      },
-      {
-        path: 'add',
-        component: () => import('@/views/user/Add.vue'),
-        name: 'add-user',
-        meta: { title: 'Add_User', icon: 'add' },
-        hidden: true
-      }
-    ]
-  },
-  {
     path: '/organization',
     component: Home,
     redirect: '/organization/department/index',
@@ -80,6 +54,12 @@ export const currentRouter = [
         component: () => import('@/views/organization/position/Index.vue'),
         name: 'position',
         meta: { title: 'Position', icon: 'mdi-account-card-details' }
+      },
+      {
+        path: 'user/index',
+        component: () => import('@/views/organization/user/Index.vue'),
+        name: 'user',
+        meta: { title: 'User', icon: 'mdi-account-group' }
       }
     ]
   },
@@ -132,6 +112,12 @@ export const currentRouter = [
         name: 'editRule',
         meta: { title: 'editRule' },
         hidden: true
+      },
+      {
+        path: 'setting/index',
+        component: () => import('@/views/system/setting/Index.vue'),
+        name: 'setting',
+        meta: { title: 'Setting', icon: 'mdi-circle-edit-outline' }
       }
     ]
   }

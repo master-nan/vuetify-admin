@@ -2,14 +2,13 @@ module.exports = {
   Menu: {
     Home: '首页',
     User: '用户管理',
-    All_User: '所有用户',
-    Add_User: '添加用户',
     Organization: '组织架构',
     Department: '部门管理',
     Position: '岗位管理',
     System: '系统设置',
     Menu: '菜单管理',
-    Rule: '权限管理'
+    Rule: '权限管理',
+    Setting: '全局设置'
   },
   Button: {
     Submit: '提交',

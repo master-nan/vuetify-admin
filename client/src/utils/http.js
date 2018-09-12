@@ -31,6 +31,17 @@ let get = (url = '', params = {}) => {
   return response
 }
 
+let del = (url = '', params = {}) => {
+  let requestConf = {
+    url,
+    baseURL: baseURL,
+    params
+  }
+
+  let response = request('delete', requestConf)
+  return response
+}
+
 let post = async (url = '', params = {}) => {
   params = _.size(params) ? qs.stringify(params) : {}
   let requestConf = {
@@ -59,5 +70,6 @@ export default{
   post,
   get,
   put,
+  del,
   baseURL
 }

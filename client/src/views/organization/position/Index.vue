@@ -33,6 +33,7 @@
           v-alert(:value="true" color="error" icon="warning" outline) Sorry, no data!
     v-dialog(v-model="show" width="500px" persistent)
       v-card
+        v-card-title.headline.grey.lighten-2(primary-title) {{title}}
         v-card-text
           v-form(ref="form" v-model="valid" lazy-validation)
             v-text-field(v-model="ruleForm.name" :rules="nameRules" label="岗位名称" required)
@@ -58,11 +59,9 @@ export default{
       loading: false,
       ruleForm: {
         name: null,
-        remark: null,
-        status: 1
+        remark: null
       },
       type: 1,
-      index: 1,
       show: false,
       valid: true,
       nameRules: [
@@ -75,21 +74,23 @@ export default{
         { text: 'Status', sortable: false },
         { text: 'Action', sortable: false }
       ],
-      data: []
+      data: [],
+      title: '添加岗位'
     }
   },
   methods: {
     add () {
+      this.title = '添加岗位'
       this.type = 1
       this.show = true
-      this.resetTemp()
       this.$nextTick(() => {
         this.$refs.form.reset()
+        delete this.ruleForm.id
       })
     },
     edit (e) {
+      this.title = '编辑岗位'
       this.type = 2
-      this.index = e.index
       this.ruleForm = util.cloneDeep(e.item)
       this.show = true
     },
@@ -101,6 +102,7 @@ export default{
           util.response(res, this)
           if (res.code === 200) {
             s.data.splice(e.index, 1)
+            s.$refs.message.open(res.error)
           } else {
             s.$refs.message.open(res.error, 'error')
           }
@@ -126,41 +128,24 @@ export default{
         this.$refs.message.open(res.error, 'error')
       }
     },
-    resetTemp () {
-      this.ruleForm = {
-        id: null,
-        name: '',
-        remark: null,
-        status: 1
-      }
-    },
     async submit () {
       if (this.$refs.form.validate()) {
         this.$refs.loading.open()
+        let res = null
         if (this.type === 1) {
-          delete this.ruleForm.id
-          let res = await api.position.save(this.ruleForm)
+          res = await api.position.save(this.ruleForm)
           this.$refs.loading.close()
-          util.response(res, this)
-          if (res.code === 200) {
-            this.$refs.message.open(res.error, 'success')
-            this.show = false
-            this.ruleForm.id = parseInt(res.data)
-            this.data.unshift(this.ruleForm)
-          } else {
-            this.$refs.message.open(res.error, 'error')
-          }
         } else {
-          let res = await api.position.update(this.ruleForm)
-          util.response(res, this)
-          this.$refs.loading.close()
-          if (res.code === 200) {
-            this.$refs.message.open(res.error, 'success')
-            this.show = false
-            this.data.splice(this.index, 1, this.ruleForm)
-          } else {
-            this.$refs.message.open(res.error, 'error')
-          }
+          res = await api.position.update(this.ruleForm)
+        }
+        this.$refs.loading.close()
+        util.response(res, this)
+        if (res.code === 200) {
+          this.$refs.message.open('操作成功', 'success')
+          this.show = false
+          this.getData()
+        } else {
+          this.$refs.message.open(res.error, 'error')
         }
       }
     },

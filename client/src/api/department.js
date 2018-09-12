@@ -33,7 +33,7 @@ let enable = async (data) => {
 
 let del = async (id) => {
   let url = path + '/' + id
-  let result = await http.delete(url, {})
+  let result = await http.del(url, {})
   return result
 }
 

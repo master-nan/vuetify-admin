@@ -2,14 +2,13 @@ module.exports = {
   Menu: {
     Home: 'Home',
     User: 'User',
-    All_User: 'All User',
-    Add_User: 'Add User',
     Organization: 'Organization',
     Department: 'Department',
     Position: 'Position',
     System: 'System',
     Menu: 'Menu',
-    Rule: 'Rule'
+    Rule: 'Rule',
+    Setting: 'Setting'
   },
   Button: {
     Submit: 'Submit',

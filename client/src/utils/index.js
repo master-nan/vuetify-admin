@@ -86,7 +86,8 @@ let returnName = (key, data = {}) => {
 
 // 深拷贝
 let cloneDeep = (val) => {
-  return Object.assign({}, val)
+  return _.cloneDeep(val)
+  // return Object.assign({}, val)
 }
 
 export default {

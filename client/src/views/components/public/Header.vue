@@ -19,8 +19,10 @@
       v-list
         v-list-tile(v-for="(lang,i) in langs" :key="i" @click="changeLocale(lang.key)")
           v-list-tile-title {{lang.value}}
-    v-avatar(size="38px" color="green lighten-4")
-      img(src="@/assets/image/avatar.jpg" alt="avatar")
+    v-tooltip(bottom)
+      v-avatar(size="38px" color="green lighten-4" slot="activator")
+        img(src="@/assets/image/avatar.jpg" alt="avatar")
+      span {{userInfo['nickname']}}
     v-menu(transition="slide-x-transition" bottom right offset-y)
       v-btn(slot="activator" icon)
         v-icon more_vert
@@ -45,6 +47,11 @@ export default {
         { key: 'zh-CN', value: '简体中文' },
         { key: 'en-US', value: 'Englinsh' }
       ]
+    }
+  },
+  computed: {
+    userInfo () {
+      return this.$store.getters.getUserInfo
     }
   },
   props: ['clipped', 'miniVariant', 'drawer'],

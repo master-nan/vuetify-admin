@@ -41,18 +41,27 @@
                   v-icon(v-else) mdi-arrow-down-bold
         template(slot="no-data")
           v-alert(:value="true" color="error" icon="warning") Sorry, no data!
-    v-dialog(v-model="show" width="500px" persistent)
+    v-dialog(v-model="show" fullscreen hide-overlay transition="dialog-bottom-transition")
       v-card
-        v-card-text
-          v-form(ref="form" v-model="valid" lazy-validation)
-            v-text-field(v-model="form.name" :rules="nameRules" label="部门名称" required)
-            v-text-field(v-model="form.remark" label="备注" required)
-            v-btn.mt-2.mr-2(@click="cancel" dark)
-              v-icon(dark left) mdi-close-circle
-              slot {{'Cancel'|i18nName('Button',self)}}
-            v-btn.mt-2(:disabled="!valid" @click="submit" color="primary")
-              v-icon(dark left) check_circle
-              slot {{'Submit'|i18nName('Button',self)}}
+        v-toolbar(dark color="primary")
+          v-btn(icon dark @click.native="op")
+            v-icon close
+          v-toolbar-title {{title}}
+          v-spacer
+        v-card-text.ml-2
+          v-btn(color="primary" :disabled="!valid" @click.stop="submit") {{'Submit'|i18nName('Button',self)}}
+        v-flex(xs6 sm6 md6 lg3 xl3)
+          v-card-text.ml-2
+            v-form(ref="form" v-model="valid" lazy-validation)
+              v-text-field(v-model="form.title" :rules="[v => !!v || 'Name is required']" label="标题" required)
+              v-text-field(v-model="form.name" :rules="[v => !!v || 'Name is required']" label="名称" required)
+              v-select(:items="options" label="父节点" item-text="title" item-value="id" :rules="pidRules" v-model="form.pid")
+              v-switch(v-model="form.show" :label="`显示完整菜单：${form.show.toString()}`" color="success" hide-details required)
+              v-switch(v-model="form.hidden" :label="`左侧隐藏：${form.hidden.toString()}`" color="indigo" hide-details required)
+              v-text-field(v-model="form.component" label="主体" placeholder="示例：home (客户端components.js中)" required)
+              v-text-field(v-model="form.path" label="访问路径" placeholder="示例：/index (子菜单请去掉/)" required)
+              v-text-field(v-model="form.redirect" label="重定向" placeholder="示例：/index (子节点无效)" required)
+              v-text-field(v-model="form.sort" label="排序" :rules="sortRules" required type="number")
     MyLoading(ref="loading")
     MyMessage(ref="message")
     MyComfirm(ref="comfirm")
@@ -64,21 +73,38 @@ import _ from 'lodash'
 export default{
   name: 'menu-index',
   data () {
+    let zeroRules = (val) => {
+      if (val || val === 0) {
+        return true
+      } else {
+        return 'Name is required'
+      }
+    }
     return {
       self: this,
       loading: false,
       form: {
+        title: null,
         name: null,
-        remark: null,
-        status: 1
+        show: true,
+        hidden: true,
+        component: null,
+        pid: 0,
+        path: null,
+        icon: null,
+        redirect: null,
+        sort: 0
       },
+      pidRules: [
+        v => zeroRules(v)
+      ],
+      sortRules: [
+        v => zeroRules(v)
+      ],
       type: 1,
       index: 1,
       show: false,
       valid: true,
-      nameRules: [
-        v => !!v || 'Name is required'
-      ],
       headers: [
         { text: 'ID', sortable: false },
         { text: 'PID', sortable: false },
@@ -91,7 +117,9 @@ export default{
         { text: 'Status', sortable: false },
         { text: 'Action', sortable: false }
       ],
-      data: []
+      data: [],
+      options: [],
+      title: '添加菜单'
     }
   },
   methods: {
@@ -116,14 +144,43 @@ export default{
         }
       }
     },
+    op () {
+      this.show = false
+      let s = this
+      setTimeout(function () {
+        s.$refs.form.reset()
+        s.form.show = true
+        s.form.hidden = true
+      }, 1000)
+    },
+    resetTemp () {
+      this.$refs.form.reset()
+      delete this.form.id
+      this.form.show = true
+      this.form.hidden = true
+      this.form.title = ''
+      this.form.name = ''
+      this.form.component = ''
+      this.form.pid = ''
+      this.form.show = ''
+      this.form.path = ''
+      this.form.icon = ''
+      this.form.redirect = ''
+      this.form.sort = ''
+    },
     add () {
       this.type = 1
-      util.toRouter('addMenu', this)
+      this.title = '添加菜单'
+      this.show = true
+      this.resetTemp()
     },
     edit (e) {
       this.type = 2
+      this.title = '编辑菜单'
       this.index = e.index
       this.form = util.cloneDeep(e.item)
+      this.form.show = this.form.show === 1
+      this.form.hidden = this.form.hidden === 1
       this.show = true
     },
     del (e) {
@@ -163,23 +220,25 @@ export default{
     async submit () {
       if (this.$refs.form.validate()) {
         this.$refs.loading.open()
-        await util.sleep()
-        this.$refs.loading.close()
-        this.show = false
-        this.$refs.message.open('操作成功', 'success')
+        let res = null
         if (this.type === 1) {
-          let d = [
-            {
-              name: this.form.name,
-              remark: this.form.remark,
-              status: this.form.status
-            }
-          ]
-          this.data = d.concat(this.data)
+          res = await api.menu.save(this.ruleForm)
+          this.$refs.loading.close()
         } else {
-          this.data[this.index] = util.cloneDeep(this.form)
+          res = await api.menu.update(this.ruleForm)
         }
-        this.$refs.form.reset()
+        this.$refs.loading.close()
+        util.response(res, this)
+        if (res.code === 200) {
+          this.$refs.message.open('操作成功', 'success')
+          this.show = false
+          this.getData()
+          this.$nextTick(() => {
+            this.$refs.form.reset()
+          })
+        } else {
+          this.$refs.message.open(res.error, 'error')
+        }
       }
     },
     async getData () {
@@ -189,6 +248,8 @@ export default{
       this.loading = false
       if (res.code === 200) {
         this.data = res.data
+        this.options = util.cloneDeep(res.data)
+        this.options.unshift({id: 0, title: '根节点'})
       }
     }
   },

@@ -135,6 +135,10 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({path: '/'})
     } else {
+      if (!store.getters.getUserInfo.length) {
+        let user = JSON.parse(sessionStorage.getItem('user'))
+        store.dispatch('setUserInfo', user)
+      }
       if (!store.getters.getPrivateRouter.length) {
         store.dispatch('setPrivateRouter', {}).then(() => {
           router.addRoutes(store.getters.getPrivateRouter)

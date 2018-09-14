@@ -5,7 +5,7 @@
         div.font-weight-medium.display-1.py-4 {{ 'Menu'|i18nName('TableTitle',self) }}
       v-divider
       div
-        v-btn.info.z-index-1(fab absolute top right dark @click.stop="add")
+        v-btn.info.z-index-1(fab absolute top right dark to="add")
           v-icon add
       v-data-table.elevation-1(:loading="loading" :headers="headers" :items="data" hide-actions :total-items="30")
         template(slot="headerCell" slot-scope="props")
@@ -41,27 +41,26 @@
                   v-icon(v-else) mdi-arrow-down-bold
         template(slot="no-data")
           v-alert(:value="true" color="error" icon="warning") Sorry, no data!
-    v-dialog(v-model="show" fullscreen hide-overlay transition="dialog-bottom-transition")
+    v-dialog(v-model="show" width="500px" persistent)
       v-card
-        v-toolbar(dark color="primary")
-          v-btn(icon dark @click.native="op")
-            v-icon close
-          v-toolbar-title {{title}}
-          v-spacer
-        v-card-text.ml-2
-          v-btn(color="primary" :disabled="!valid" @click.stop="submit") {{'Submit'|i18nName('Button',self)}}
-        v-flex(xs6 sm6 md6 lg3 xl3)
-          v-card-text.ml-2
-            v-form(ref="form" v-model="valid" lazy-validation)
-              v-text-field(v-model="form.title" :rules="[v => !!v || 'Name is required']" label="标题" required)
-              v-text-field(v-model="form.name" :rules="[v => !!v || 'Name is required']" label="名称" required)
-              v-select(:items="options" label="父节点" item-text="title" item-value="id" :rules="pidRules" v-model="form.pid")
-              v-switch(v-model="form.show" :label="`显示完整菜单：${form.show.toString()}`" color="success" hide-details required)
-              v-switch(v-model="form.hidden" :label="`左侧隐藏：${form.hidden.toString()}`" color="indigo" hide-details required)
-              v-text-field(v-model="form.component" label="主体" placeholder="示例：home (客户端components.js中)" required)
-              v-text-field(v-model="form.path" label="访问路径" placeholder="示例：/index (子菜单请去掉/)" required)
-              v-text-field(v-model="form.redirect" label="重定向" placeholder="示例：/index (子节点无效)" required)
-              v-text-field(v-model="form.sort" label="排序" :rules="sortRules" required type="number")
+        v-card-title.headline.grey.lighten-2(primary-title) 编辑菜单
+        v-card-text
+          v-form(ref="form" v-model="valid" lazy-validation)
+            v-text-field(v-model="form.title" :rules="[v => !!v || 'Name is required']" label="标题" required)
+            v-text-field(v-model="form.name" :rules="[v => !!v || 'Name is required']" label="名称" required)
+            v-select(:items="options" label="父节点" item-text="title" item-value="id" :rules="pidRules" v-model="form.pid")
+            v-switch(v-model="form.show" :label="`显示完整菜单：${form.show.toString()}`" color="success" hide-details required)
+            v-switch(v-model="form.hidden" :label="`左侧隐藏：${form.hidden.toString()}`" color="indigo" hide-details required)
+            v-text-field(v-model="form.component" label="主体" placeholder="示例：home (客户端components.js中)" required)
+            v-text-field(v-model="form.path" label="访问路径" placeholder="示例：/index (子菜单请去掉/)" required)
+            v-text-field(v-model="form.redirect" label="重定向" placeholder="示例：/index (子节点无效)" required)
+            v-text-field(v-model="form.sort" label="排序" :rules="sortRules" required type="number")
+            v-btn.mt-2.mr-2(@click="cancel" dark)
+              v-icon(dark left) mdi-close-circle
+              slot {{'Cancel'|i18nName('Button',self)}}
+            v-btn.mt-2(:disabled="!valid" @click="submit" color="primary")
+              v-icon(dark left) check_circle
+              slot {{'Submit'|i18nName('Button',self)}}
     MyLoading(ref="loading")
     MyMessage(ref="message")
     MyComfirm(ref="comfirm")
@@ -118,8 +117,7 @@ export default{
         { text: 'Action', sortable: false }
       ],
       data: [],
-      options: [],
-      title: '添加菜单'
+      options: []
     }
   },
   methods: {
@@ -144,39 +142,7 @@ export default{
         }
       }
     },
-    op () {
-      this.show = false
-      let s = this
-      setTimeout(function () {
-        s.$refs.form.reset()
-        s.form.show = true
-        s.form.hidden = true
-      }, 1000)
-    },
-    resetTemp () {
-      this.$refs.form.reset()
-      delete this.form.id
-      this.form.show = true
-      this.form.hidden = true
-      this.form.title = ''
-      this.form.name = ''
-      this.form.component = ''
-      this.form.pid = ''
-      this.form.show = ''
-      this.form.path = ''
-      this.form.icon = ''
-      this.form.redirect = ''
-      this.form.sort = ''
-    },
-    add () {
-      this.type = 1
-      this.title = '添加菜单'
-      this.show = true
-      this.resetTemp()
-    },
     edit (e) {
-      this.type = 2
-      this.title = '编辑菜单'
       this.index = e.index
       this.form = util.cloneDeep(e.item)
       this.form.show = this.form.show === 1
@@ -220,22 +186,13 @@ export default{
     async submit () {
       if (this.$refs.form.validate()) {
         this.$refs.loading.open()
-        let res = null
-        if (this.type === 1) {
-          res = await api.menu.save(this.ruleForm)
-          this.$refs.loading.close()
-        } else {
-          res = await api.menu.update(this.ruleForm)
-        }
+        let res = await api.menu.update(this.form)
         this.$refs.loading.close()
         util.response(res, this)
         if (res.code === 200) {
           this.$refs.message.open('操作成功', 'success')
           this.show = false
           this.getData()
-          this.$nextTick(() => {
-            this.$refs.form.reset()
-          })
         } else {
           this.$refs.message.open(res.error, 'error')
         }

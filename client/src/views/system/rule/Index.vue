@@ -25,13 +25,48 @@
             v-btn.my-1.mr-2(fab small color="error" dark @click="del(props)")
               v-icon delete
             v-btn.my-1(style="min-width:60px" v-if="props.item.status == 1" small color="warning" @click="enable(props)")
-              //- v-icon delete
               slot {{'Disable'|i18nName('Button',self)}}
             v-btn.my-1(style="min-width:60px" v-else small color="success" @click="enable(props)")
-              //- v-icon delete
               slot {{'Enable'|i18nName('Button',self)}}
         template(slot="no-data")
           v-alert(:value="true" color="error" icon="warning" outline) Sorry, no data!
+    v-dialog(v-model="show" width="500px" persistent)
+      v-card
+        v-card-title.headline.grey.lighten-2(primary-title) 编辑权限
+        v-card-text
+          v-form(ref="form" v-model="valid" lazy-validation)
+            v-text-field(v-model="form.name" :rules="[v => !!v || 'Name is required']" label="名称" required)
+            v-text-field(v-model="form.remark" :rules="[v => !!v || 'Remark is required']" label="备注" required)
+            v-list.mt-3.menu-list(two-line)
+              template(v-for="item in items")
+                v-list-tile(@click="check(item)")
+                  v-list-tile-action
+                    v-checkbox(v-model="item.checked" color="success" :key="item.id")
+                  v-list-tile-content
+                    v-list-tile-title {{item.title}}
+                    v-list-tile-sub-title {{item.name}}
+                div.ml-3
+                  template(v-for="childItem in item.children")
+                    v-list-tile(@click="check(childItem)")
+                      v-list-tile-action
+                        v-checkbox(v-model="childItem.checked" color="success" :key="childItem.id")
+                      v-list-tile-content
+                        v-list-tile-title {{childItem.title}}
+                        v-list-tile-sub-title {{childItem.name}}
+                    div.ml-5
+                      template(v-for="child in childItem.children")
+                        v-list-tile(@click="check(child)")
+                          v-list-tile-action
+                            v-checkbox(v-model="child.checked" color="success" :key="child.id")
+                          v-list-tile-content
+                            v-list-tile-title {{child.title}}
+                            v-list-tile-sub-title {{child.name}}
+            v-btn.mt-2.mr-2(@click="cancel" dark)
+              v-icon(dark left) mdi-close-circle
+              slot {{'Cancel'|i18nName('Button',self)}}
+            v-btn.mt-2(:disabled="!valid" @click="submit" color="primary")
+              v-icon(dark left) check_circle
+              slot {{'Submit'|i18nName('Button',self)}}
     MyLoading(ref="loading")
     MyMessage(ref="message")
     MyComfirm(ref="comfirm")
@@ -39,6 +74,7 @@
 <script>
 import util from '@/utils'
 import api from '@/api'
+import _ from 'lodash'
 export default{
   name: 'rule-index',
   data () {
@@ -48,7 +84,6 @@ export default{
       form: {
         name: null,
         remark: null,
-        status: 1,
         rs: null
       },
       valid: true,
@@ -60,15 +95,66 @@ export default{
         { text: 'Status', sortable: false },
         { text: 'Action', sortable: false }
       ],
-      data: []
+      data: [],
+      show: false,
+      items: [],
+      keys: []
     }
   },
   methods: {
+    cancel () {
+      this.show = false
+    },
     add () {
       util.toRouter('addRule', this)
     },
     edit (e) {
-      util.toRouter('editRule', this, {'id': e.item.id})
+      // util.toRouter('editRule', this, {'id': e.item.id})
+      this.index = e.index
+      this.form = util.cloneDeep(e.item)
+      if (this.form.rs) {
+        this.keys = this.form.rs.split(',').map(e => {
+          return parseInt(e)
+        })
+      }
+      this.show = true
+    },
+    async submit () {
+      if (this.$refs.form.validate()) {
+        this.form.rs = this.keys.toString()
+        this.$refs.loading.open()
+        let res = await api.rule.update(this.form)
+        util.response(res, this)
+        this.$refs.loading.close()
+        if (res.code === 200) {
+          this.$refs.message.open(res.error, 'success')
+          this.show = false
+          this.getData()
+        } else {
+          this.$refs.message.open(res.error, 'error')
+        }
+      }
+    },
+    check (e) {
+      let index = this.keys.indexOf(e.id)
+      if (index > -1) {
+        this.keys.splice(index, 1)
+        e.checked = false
+      } else {
+        this.keys.push(e.id)
+        e.checked = true
+      }
+    },
+    eachItems (item) {
+      let s = this
+      _.forEach(item, function (res) {
+        if (s.keys.indexOf(res.id) > -1) {
+          res.checked = true
+        }
+        if (res.children) {
+          s.eachItems(res.children)
+        }
+      })
     },
     del (e) {
       let s = this
@@ -101,6 +187,13 @@ export default{
         this.$refs.message.open(res.error, 'error')
       }
     },
+    async getMenu () {
+      let res = await api.menu.index()
+      util.response(res, this)
+      if (res.code === 200) {
+        this.items = res.data
+      }
+    },
     async getData () {
       this.loading = true
       let res = await api.rule.index(this.list)
@@ -112,7 +205,13 @@ export default{
     }
   },
   created () {
+    this.getMenu()
     this.getData()
+  },
+  watch: {
+    'form' (e) {
+      this.eachItems(this.items)
+    }
   }
 }
 </script>

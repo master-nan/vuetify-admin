@@ -87,13 +87,6 @@ export const currentRouter = [
         hidden: true
       },
       {
-        path: 'menu/edit',
-        component: () => import('@/views/system/menu/Edit.vue'),
-        name: 'editMenu',
-        meta: { title: 'editMenu' },
-        hidden: true
-      },
-      {
         path: 'rule/index',
         component: () => import('@/views/system/rule/Index.vue'),
         name: 'rule',
@@ -104,13 +97,6 @@ export const currentRouter = [
         component: () => import('@/views/system/rule/Add.vue'),
         name: 'addRule',
         meta: { title: 'addRule' },
-        hidden: true
-      },
-      {
-        path: 'rule/edit/:id',
-        component: () => import('@/views/system/rule/Edit.vue'),
-        name: 'editRule',
-        meta: { title: 'editRule' },
         hidden: true
       },
       {

@@ -18,6 +18,7 @@ return [
         'department'=>  'admin/department',
         'user'      =>  'admin/adminUser',
         'rule'      =>  'admin/rule',
+        'setting'   =>  'admin/sysConfig',
     ],
     '[base]'      => [
         'index'   => ['admin/base/index', ['method' => 'get']],

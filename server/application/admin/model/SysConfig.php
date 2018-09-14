@@ -12,13 +12,8 @@ class SysConfig extends Model
         return $res;
     }
 
-    public function update($id = null, $param = [])
+    public function updateConfig($id = null, $param = [])
     {
-        $validate = validate($this->name);
-        if (!$validate->check($param)) {
-            $this->error = $validate->getError();
-            return false;
-        }
         try {
             $this->allowField(true)->save($param, [$this->getPk() => $id]);
             return true;

@@ -5,6 +5,7 @@ import menu from './menu'
 import position from './position'
 import rule from './rule'
 import user from './user'
+import setting from './setting'
 
 export default {
   base,
@@ -13,5 +14,6 @@ export default {
   menu,
   position,
   rule,
-  user
+  user,
+  setting
 }

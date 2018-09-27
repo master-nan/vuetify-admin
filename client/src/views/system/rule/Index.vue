@@ -20,13 +20,13 @@
           td.text-xs-left
             v-chip(:color="props.item.status|statusChipFilter(1)|i18nName('Tag',self)" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
           td.justify-left
-            v-btn.my-1.mr-2(fab small color="cyan" dark @click="edit(props)")
+            v-btn.my-1.mr-2(fab small color="primary" dark @click="edit(props)")
               v-icon edit
             v-btn.my-1.mr-2(fab small color="error" dark @click="del(props)")
               v-icon delete
-            v-btn.my-1(style="min-width:60px" v-if="props.item.status == 1" small color="warning" @click="enable(props)")
+            v-btn.my-1(round style="min-width:60px" v-if="props.item.status == 1" small color="warning" @click="enable(props)")
               slot {{'Disable'|i18nName('Button',self)}}
-            v-btn.my-1(style="min-width:60px" v-else small color="success" @click="enable(props)")
+            v-btn.my-1(round style="min-width:60px" v-else small color="success" @click="enable(props)")
               slot {{'Enable'|i18nName('Button',self)}}
         template(slot="no-data")
           v-alert(:value="true" color="error" icon="warning" outline) Sorry, no data!
@@ -37,7 +37,7 @@
           v-form(ref="form" v-model="valid" lazy-validation)
             v-text-field(v-model="form.name" :rules="[v => !!v || 'Name is required']" label="名称" required)
             v-text-field(v-model="form.remark" :rules="[v => !!v || 'Remark is required']" label="备注" required)
-            v-list.mt-3.menu-list(two-line)
+            v-list.mt-3.menu-list
               template(v-for="item in items")
                 v-list-tile(@click="check(item)")
                   v-list-tile-action
@@ -116,6 +116,8 @@ export default{
         this.keys = this.form.rs.split(',').map(e => {
           return parseInt(e)
         })
+      } else {
+        this.keys = []
       }
       this.show = true
     },
@@ -150,6 +152,8 @@ export default{
       _.forEach(item, function (res) {
         if (s.keys.indexOf(res.id) > -1) {
           res.checked = true
+        } else {
+          res.checked = false
         }
         if (res.children) {
           s.eachItems(res.children)
@@ -216,6 +220,13 @@ export default{
 }
 </script>
 <style lang="less" scoped>
+.menu-list {
+  height: 400px;
+  overflow-y: auto;
+  .v-list__tile{
+    height: 45px;
+  }
+}
 .v-btn{
   margin-left: 0px;
   margin-right: 0px;

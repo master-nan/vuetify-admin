@@ -32,15 +32,13 @@
           td.text-xs-left
             v-chip(:color="props.item.status|statusChipFilter(1)|i18nName('Tag',self)" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
           td.justify-left
-            v-btn.my-1.mr-2(fab small color="cyan" dark @click="edit(props)")
+            v-btn.my-1.mr-2(fab small color="primary" dark @click="edit(props)")
               v-icon edit
             v-btn.my-1.mr-2(fab small color="error" dark @click="del(props)")
               v-icon delete
-            v-btn.my-1(style="min-width:60px" v-if="props.item.status == 1" small color="warning" @click="enable(props)")
-              //- v-icon delete
+            v-btn.my-1(round style="min-width:60px" v-if="props.item.status == 1" small color="warning" @click="enable(props)")
               slot {{'Disable'|i18nName('Button',self)}}
-            v-btn.my-1(style="min-width:60px" v-else small color="success" @click="enable(props)")
-              //- v-icon delete
+            v-btn.my-1(round style="min-width:60px" v-else small color="success" @click="enable(props)")
               slot {{'Enable'|i18nName('Button',self)}}
         template(slot="no-data")
           v-alert(:value="true" color="error" icon="warning" outline) Sorry, no data!

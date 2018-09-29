@@ -9,6 +9,10 @@ function getTree($data = [])
     foreach ($data as $key => &$value) {
         $value['checked'] = false;
         if ($value['pid'] == 0) {
+            $value['meta']['title'] = $value['title'];
+            $value['meta']['icon'] = $value['icon'];
+            unset($value['title']);
+            unset($value['icon']);
             array_push($arr, $value);
             unset($value);
         }
@@ -17,6 +21,8 @@ function getTree($data = [])
     foreach ($data as $key => &$value) {
         if ($value['pid'] != 0) {
             unset($value['redirect']);
+            $value['meta']['title'] = $value['title'];
+            $value['meta']['icon'] = $value['icon'];
             foreach ($arr as $k => &$v) {
                 if ($v['id'] == $value['pid']) {
                     if (isset($v['children'])) {

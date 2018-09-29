@@ -26,6 +26,7 @@
               v-chip(:color="props.item.hidden|statusChipFilter(3)|i18nName('Tag',self)" label outline) {{props.item.hidden|statusFilter(3)|i18nName('Tag',self)}}
             td.text-xs-left
               v-chip(:color="props.item.status|statusChipFilter(1)|i18nName('Tag',self)" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
+            td.text-xs-left {{ props.item.sort }}
             td.justify-left
               v-btn.my-1.mr-2(fab small color="primary" dark @click="edit(props)")
                 v-icon edit
@@ -114,6 +115,7 @@ export default{
         { text: 'Show', sortable: false },
         { text: 'Hidden', sortable: false },
         { text: 'Status', sortable: false },
+        { text: 'Sort', sortable: false },
         { text: 'Action', sortable: false }
       ],
       data: [],

@@ -4,8 +4,8 @@ import store from '@/store'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
 
-import Home from '@/views/public/Home'
-
+import home from '@/views/public/Home'
+import util from '@/utils'
 Vue.use(Router)
 
 export const publicRouter = [
@@ -20,7 +20,7 @@ export const publicRouter = [
 export const currentRouter = [
   {
     path: '',
-    component: Home,
+    component: home,
     meta: {
       title: 'Home',
       icon: 'mdi-home'
@@ -32,81 +32,81 @@ export const currentRouter = [
       name: 'index',
       meta: { title: 'Home', icon: 'mdi-home' }
     }]
-  },
-  {
-    path: '/organization',
-    component: Home,
-    redirect: '/organization/department/index',
-    name: 'organization',
-    meta: {
-      title: 'Organization',
-      icon: 'mdi-sitemap'
-    },
-    children: [
-      {
-        path: 'department/index',
-        component: () => import('@/views/organization/department/Index.vue'),
-        name: 'department',
-        meta: { title: 'Department', icon: 'mdi-puzzle' }
-      },
-      {
-        path: 'position/index',
-        component: () => import('@/views/organization/position/Index.vue'),
-        name: 'position',
-        meta: { title: 'Position', icon: 'mdi-account-card-details' }
-      },
-      {
-        path: 'user/index',
-        component: () => import('@/views/organization/user/Index.vue'),
-        name: 'user',
-        meta: { title: 'User', icon: 'mdi-account-group' }
-      }
-    ]
-  },
-  {
-    path: '/system',
-    component: Home,
-    redirect: '/system/menu/index',
-    name: 'system',
-    meta: {
-      title: 'System',
-      icon: 'mdi-settings'
-    },
-    children: [
-      {
-        path: 'menu/index',
-        component: () => import('@/views/system/menu/Index.vue'),
-        name: 'menu',
-        meta: { title: 'Menu', icon: 'mdi-format-list-bulleted' }
-      },
-      {
-        path: 'menu/add',
-        component: () => import('@/views/system/menu/Add.vue'),
-        name: 'addMenu',
-        meta: { title: 'addMenu' },
-        hidden: true
-      },
-      {
-        path: 'rule/index',
-        component: () => import('@/views/system/rule/Index.vue'),
-        name: 'rule',
-        meta: { title: 'Rule', icon: 'mdi-account-key' }
-      },
-      {
-        path: 'rule/add',
-        component: () => import('@/views/system/rule/Add.vue'),
-        name: 'addRule',
-        meta: { title: 'addRule' },
-        hidden: true
-      },
-      {
-        path: 'setting/index',
-        component: () => import('@/views/system/setting/Index.vue'),
-        name: 'setting',
-        meta: { title: 'Setting', icon: 'mdi-circle-edit-outline' }
-      }
-    ]
   }
+  // {
+  //   path: '/organization',
+  //   component: home,
+  //   redirect: '/organization/department/index',
+  //   name: 'organization',
+  //   meta: {
+  //     title: 'Organization',
+  //     icon: 'mdi-sitemap'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'department/index',
+  //       component: () => import('@/views/organization/department/Index.vue'),
+  //       name: 'department',
+  //       meta: { title: 'Department', icon: 'mdi-puzzle' }
+  //     },
+  //     {
+  //       path: 'position/index',
+  //       component: () => import('@/views/organization/position/Index.vue'),
+  //       name: 'position',
+  //       meta: { title: 'Position', icon: 'mdi-account-card-details' }
+  //     },
+  //     {
+  //       path: 'user/index',
+  //       component: () => import('@/views/organization/user/Index.vue'),
+  //       name: 'user',
+  //       meta: { title: 'User', icon: 'mdi-account-group' }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/system',
+  //   component: home,
+  //   redirect: '/system/menu/index',
+  //   name: 'system',
+  //   meta: {
+  //     title: 'System',
+  //     icon: 'mdi-settings'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'menu/index',
+  //       component: () => import('@/views/system/menu/Index.vue'),
+  //       name: 'menu',
+  //       meta: { title: 'Menu', icon: 'mdi-format-list-bulleted' }
+  //     },
+  //     {
+  //       path: 'menu/add',
+  //       component: () => import('@/views/system/menu/Add.vue'),
+  //       name: 'addMenu',
+  //       meta: { title: 'addMenu' },
+  //       hidden: true
+  //     },
+  //     {
+  //       path: 'rule/index',
+  //       component: () => import('@/views/system/rule/Index.vue'),
+  //       name: 'rule',
+  //       meta: { title: 'Rule', icon: 'mdi-account-key' }
+  //     },
+  //     {
+  //       path: 'rule/add',
+  //       component: () => import('@/views/system/rule/Add.vue'),
+  //       name: 'addRule',
+  //       meta: { title: 'addRule' },
+  //       hidden: true
+  //     },
+  //     {
+  //       path: 'setting/index',
+  //       component: () => import('@/views/system/setting/Index.vue'),
+  //       name: 'setting',
+  //       meta: { title: 'Setting', icon: 'mdi-circle-edit-outline' }
+  //     }
+  //   ]
+  // }
 ]
 
 export const router = new Router({
@@ -126,10 +126,19 @@ router.beforeEach((to, from, next) => {
         store.dispatch('setUserInfo', user)
       }
       if (!store.getters.getPrivateRouter.length) {
-        store.dispatch('setPrivateRouter', {}).then(() => {
-          router.addRoutes(store.getters.getPrivateRouter)
-          next({ ...to, replace: true })
-        })
+        let r = util.setMenus()
+        if (r) {
+          console.log(r)
+          store.dispatch('setPrivateRouter', r).then(() => {
+            router.addRoutes(store.getters.getPrivateRouter)
+            next({ ...to, replace: true })
+          })
+        } else {
+          sessionStorage.removeItem('token')
+          sessionStorage.removeItem('menus')
+          store.dispatch('setPrivateRouter', null)
+          next({path: '/login'})
+        }
       } else {
         if (JSON.stringify(to.meta) === '{}' && to.name) {
           next({path: '/404'})

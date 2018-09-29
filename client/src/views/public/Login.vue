@@ -7,7 +7,7 @@
               div.display-3.py-4(style="color:#1565C0") Walnutech
             v-card.elevation-12
               v-toolbar(dark color="primary")
-                v-toolbar-title Login
+                v-toolbar-title {{ 'Login'|i18nName('Login',self) }}
                 v-spacer
                 v-menu(transition="slide-x-transition" bottom right offset-y)
                   v-btn(icon, dark, slot="activator")
@@ -21,11 +21,11 @@
                   span Github
               v-card-text
                 v-form(ref="form")
-                  v-text-field(prepend-icon="person" v-model="form.username" :rules="[v => !!v || 'Username is required']" label="Username" type="text")
-                  v-text-field(prepend-icon="lock" v-model="form.password"  :rules="[v => !!v || 'Password is required']" label="Password" type="password")
+                  v-text-field(prepend-icon="person" v-model="form.username" :rules="[v => !!v || 'Username is required']" :label="i18nName('Login','Username')" type="text")
+                  v-text-field(prepend-icon="lock" v-model="form.password"  :rules="[v => !!v || 'Password is required']" :label="i18nName('Login','Password')" type="password")
               v-card-actions
                 v-spacer
-                v-btn(color="primary" @click="submit") Login
+                v-btn(color="primary" @click="submit") {{ 'Submit'|i18nName('Login',self) }}
       Footer(:fixed="fixed")
       MyLoading(ref="loading")
       MyMessage(ref="message")
@@ -34,6 +34,7 @@
 import Footer from '@/views/components/public/Footer'
 import api from '@/api'
 import util from '@/utils'
+import http from '@/utils/http'
 export default {
   data () {
     return {
@@ -56,6 +57,9 @@ export default {
     Footer
   },
   methods: {
+    i18nName (key = '', title = '') {
+      return util.i18nName(key, title, this)
+    },
     async submit () {
       if (this.$refs.form.validate()) {
         this.$refs.loading.open()
@@ -63,7 +67,11 @@ export default {
         await util.sleep()
         this.$refs.loading.close()
         if (res.code === 200) {
+          if (res.data.user['avatar']) {
+            res.data.user['avatar'] = http.baseURL + res.data.user['avatar']
+          }
           this.$refs.message.open('登录成功', 'success')
+          sessionStorage.setItem('menus', JSON.stringify(res.data.menus))
           sessionStorage.setItem('user', JSON.stringify(res.data.user))
           sessionStorage.setItem('token', res.data.token)
           util.toRouter('index', this)

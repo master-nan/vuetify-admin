@@ -1,6 +1,7 @@
 import { Message } from 'element-ui'
 import _ from 'lodash'
 import http from '@/utils/http'
+import comps from './components'
 
 let response = async (res, vm) => {
   if (res.code === 101) {
@@ -18,8 +19,8 @@ let response = async (res, vm) => {
 
 let clearSome = (vm) => {
   sessionStorage.removeItem('token')
-  // vm.$store.dispatch('setPrivateRouter', null)
-  // vm.$store.dispatch('setUserInfo', null)
+  vm.$store.dispatch('setPrivateRouter', null)
+  vm.$store.dispatch('setUserInfo', null)
   vm.$router.push('/login')
 }
 
@@ -48,6 +49,31 @@ let toRouter = (name, vm, data = {}, type = 'params') => {
       vm.$router.push({name: name, query: data})
     }
   }
+}
+
+let setMenus = () => {
+  let data = sessionStorage.getItem('menus')
+  let d = []
+  if (data) {
+    d = setComponent(JSON.parse(data))
+  }
+  return d
+}
+
+let setComponent = (data = {}) => {
+  _.forEach(data, function (v, k) {
+    v.meta = {
+      title: v.title,
+      icon: v.icon
+    }
+    if (v.name && comps[v.name]) {
+      v.component = comps[v.name]
+    } else {
+      v.component = comps['home']
+    }
+    if (v.children && v.children.length) v.children = setComponent(v.children)
+  })
+  return data
 }
 
 let setUser = (data, vm) => {
@@ -96,6 +122,7 @@ export default {
   sleep,
   toRouter,
   clearSome,
+  setMenus,
   setUser,
   i18nName,
   cloneDeep,

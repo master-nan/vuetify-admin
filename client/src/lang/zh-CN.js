@@ -26,6 +26,12 @@ module.exports = {
     Enable: '启用',
     Disable: '禁用'
   },
+  Login: {
+    Login: '登录',
+    Submit: '确定',
+    Username: '用户名',
+    Password: '密码'
+  },
   Comfirm: {
     Title: '警告',
     Content: '确认删除当前数据 ?'
@@ -52,7 +58,8 @@ module.exports = {
     Path: '路径',
     Redirect: '重定向',
     Show: '完整子菜单',
-    Hidden: '左侧状态'
+    Hidden: '左侧状态',
+    Sort: '排序'
   },
   TableTitle: {
     Department: '部门',

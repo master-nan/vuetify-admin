@@ -26,6 +26,12 @@ module.exports = {
     Enable: 'Enable',
     Disable: 'Disable'
   },
+  Login: {
+    Login: 'Login',
+    Submit: 'Submit',
+    Username: 'Username',
+    Password: 'Password'
+  },
   Comfirm: {
     Title: 'Warning',
     Content: 'Confirm delete current data ?'
@@ -52,7 +58,8 @@ module.exports = {
     Path: 'Path',
     Redirect: 'Redirect',
     Show: 'Full menu',
-    Hidden: 'Left Status'
+    Hidden: 'Left Status',
+    Sort: 'Sort'
   },
   TableTitle: {
     Department: 'Department',

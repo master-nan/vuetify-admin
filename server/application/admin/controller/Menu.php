@@ -39,9 +39,6 @@ class Menu extends Comm
         if (!$this->checkRule()) {
             return msg(102, null, '您没有权限操作');
         }
-        if (!$this->param['redirect']) {
-            $this->param['redirect'] = 'noredirect';
-        }
         if ($this->param['show'] == 'true') {
             $this->param['show'] = 1;
         } else {
@@ -64,9 +61,6 @@ class Menu extends Comm
     {
         if (!$this->checkRule()) {
             return msg(102, null, '您没有权限操作');
-        }
-        if (!$this->param['redirect']) {
-            $this->param['redirect'] = 'noredirect';
         }
         if ($this->param['id']) {
             $id = $this->param['id'];

@@ -9,26 +9,26 @@
         v-text-field(v-model="form.remark" :rules="[v => !!v || 'Remark is required']" label="备注" required)
         v-list.mt-3.menu-list(two-line)
           template(v-for="item in data")
-            v-list-tile(@click="")
+            v-list-tile(@click="check(item)")
               v-list-tile-action
                 v-checkbox(v-model="item.checked" color="success" :key="item.id")
-              v-list-tile-content(@click.prevent="check(item)")
+              v-list-tile-content
                 v-list-tile-title {{item.title}}
                 v-list-tile-sub-title {{item.name}}
             div.ml-3
               template(v-for="childItem in item.children")
-                v-list-tile(@click="")
+                v-list-tile(@click="check(childItem)")
                   v-list-tile-action
                     v-checkbox(v-model="childItem.checked" color="success" :key="childItem.id")
-                  v-list-tile-content(@click.prevent="check(childItem)")
+                  v-list-tile-content
                     v-list-tile-title {{childItem.title}}
                     v-list-tile-sub-title {{childItem.name}}
                 div.ml-5
                   template(v-for="child in childItem.children")
-                    v-list-tile(@click="")
+                    v-list-tile(@click="check(child)")
                       v-list-tile-action
                         v-checkbox(v-model="child.checked" color="success" :key="child.id")
-                      v-list-tile-content(@click.prevent="check(child)")
+                      v-list-tile-content
                         v-list-tile-title {{child.title}}
                         v-list-tile-sub-title {{child.name}}
         v-btn.mt-4(:disabled="!valid" @click="submit" color="primary")

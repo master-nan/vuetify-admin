@@ -125,10 +125,12 @@ router.beforeEach((to, from, next) => {
         let user = JSON.parse(sessionStorage.getItem('user'))
         store.dispatch('setUserInfo', user)
       }
+      console.log(store.getters.getPrivateRouter)
+      console.log(store.getters.getPrivateRouter.length)
       if (!store.getters.getPrivateRouter.length) {
         let r = util.setMenus()
         if (r) {
-          console.log(r)
+          console.log(1)
           store.dispatch('setPrivateRouter', r).then(() => {
             router.addRoutes(store.getters.getPrivateRouter)
             next({ ...to, replace: true })

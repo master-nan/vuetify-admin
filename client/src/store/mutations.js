@@ -1,8 +1,9 @@
 import { currentRouter } from '@/router'
 const mutations = {
   setPrivateRouter (state, data) {
+    console.log(2)
     if (data && data.length) {
-      state.privateRouter = currentRouter
+      state.privateRouter = currentRouter.concat(data)
     } else {
       state.privateRouter = currentRouter
     }

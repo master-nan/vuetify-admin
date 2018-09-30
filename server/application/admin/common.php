@@ -11,8 +11,6 @@ function getTree($data = [])
         if ($value['pid'] == 0) {
             $value['meta']['title'] = $value['title'];
             $value['meta']['icon'] = $value['icon'];
-            unset($value['title']);
-            unset($value['icon']);
             array_push($arr, $value);
             unset($value);
         }

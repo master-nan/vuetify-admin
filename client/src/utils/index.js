@@ -1,16 +1,14 @@
-import { Message } from 'element-ui'
 import _ from 'lodash'
 import http from '@/utils/http'
 import comps from './components'
+import moment from 'moment'
 
 let response = async (res, vm) => {
   if (res.code === 101) {
-    message(res.error, 'error')
     await sleep()
     clearSome(vm)
     return false
   } else if (res.code === 401) {
-    message(res.error, 'error')
     await sleep()
     vm.$router.push('/401')
     return false
@@ -19,19 +17,12 @@ let response = async (res, vm) => {
 
 let clearSome = (vm) => {
   sessionStorage.removeItem('token')
+  sessionStorage.removeItem('setting')
   sessionStorage.removeItem('menus')
   sessionStorage.removeItem('user')
   vm.$store.dispatch('setPrivateRouter', null)
   vm.$store.dispatch('setUserInfo', null)
   vm.$router.push('/login')
-}
-
-let message = (msg, type = 'success', duration = 800) => {
-  Message({
-    message: msg,
-    type: type,
-    duration: duration
-  })
 }
 
 let sleep = (d = 800) => {
@@ -117,10 +108,15 @@ let cloneDeep = (val) => {
   return _.cloneDeep(val)
   // return Object.assign({}, val)
 }
+let timeFilter = (value, format = 'YYYY-MM-DD HH:mm:ss') => {
+  if (!value) return ''
+  let day = moment.unix(value)
+  let date = moment(day).format(format)
+  return date
+}
 
 export default {
   response,
-  message,
   sleep,
   toRouter,
   clearSome,
@@ -128,5 +124,6 @@ export default {
   setUser,
   i18nName,
   cloneDeep,
-  returnName
+  returnName,
+  timeFilter
 }

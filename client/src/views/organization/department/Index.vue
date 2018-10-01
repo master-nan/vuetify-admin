@@ -96,6 +96,7 @@ export default{
         async function () {
           let res = await api.department.del(e.item.id)
           util.response(res, this)
+          console.log(111)
           if (res.code === 200) {
             s.data.splice(e.index, 1)
             s.$refs.message.open(res.error)

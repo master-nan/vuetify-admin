@@ -11,7 +11,7 @@
  Target Server Version : 80011
  File Encoding         : 65001
 
- Date: 01/10/2018 21:15:55
+ Date: 01/10/2018 23:42:32
 */
 
 SET NAMES utf8mb4;
@@ -41,8 +41,8 @@ CREATE TABLE `m_admin_user` (
 -- Records of m_admin_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `m_admin_user` VALUES (1, '管理员', 'admin', 'cea3e8e1659582206e0be32539729e9f', NULL, NULL, NULL, NULL, 1538398901, 1538399721, NULL, 1);
-INSERT INTO `m_admin_user` VALUES (2, '测试11', 'dev', 'e77989ed21758e78331b20e477fc5582', 0, 1, 2, 3, 1533287732, 1533287755, '', 1);
+INSERT INTO `m_admin_user` VALUES (1, '管理员', 'admin', 'cea3e8e1659582206e0be32539729e9f', NULL, NULL, NULL, NULL, 1538407799, 1538407812, NULL, 1);
+INSERT INTO `m_admin_user` VALUES (2, '测试11', 'dev', 'c9a973c677899e92518c823c31527716', 0, 1, 2, 3, 1538407832, 1533287755, '', 1);
 COMMIT;
 
 -- ----------------------------
@@ -97,7 +97,7 @@ CREATE TABLE `m_menu` (
   `icon` varchar(64) DEFAULT NULL COMMENT '显示icon class，一级菜单有效',
   `component` varchar(255) DEFAULT NULL COMMENT '引入的vue在前端代码中的位置',
   `path` varchar(255) DEFAULT NULL COMMENT '路径',
-  `redirect` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' COMMENT '面包屑点击跳转路径',
+  `redirect` varchar(255) DEFAULT '' COMMENT '面包屑点击跳转路径',
   `show` tinyint(1) DEFAULT '1' COMMENT '是否始终在左侧显示',
   `hidden` tinyint(1) DEFAULT '0' COMMENT '是否在左侧隐藏',
   `sort` tinyint(2) DEFAULT '0' COMMENT '排序',
@@ -112,14 +112,14 @@ CREATE TABLE `m_menu` (
 BEGIN;
 INSERT INTO `m_menu` VALUES (1, 0, 'organization', 'Organization', 'mdi-sitemap', 'home', '/organization', '', 1, 0, 8, 1, '');
 INSERT INTO `m_menu` VALUES (2, 0, 'system', 'System', 'mdi-settings', 'home', '/system', '', 1, 0, 9, 1, '');
-INSERT INTO `m_menu` VALUES (3, 1, 'department', 'Department', 'mdi-puzzle', 'department', 'department/index', '', 1, 0, 1, 1, '');
-INSERT INTO `m_menu` VALUES (4, 1, 'position', 'Position', 'mdi-account-card-details', 'position', 'position/index', '', 1, 0, 2, 1, 'admin-Menu-save');
-INSERT INTO `m_menu` VALUES (5, 1, 'user', 'User', 'mdi-account-group', 'user', 'user/index', '', 1, 0, 3, 1, 'admin-Menu-index');
-INSERT INTO `m_menu` VALUES (6, 2, 'menu', 'Menu', 'mdi-format-list-bulleted', 'menu', 'menu/index', '', 1, 0, 1, 1, '');
-INSERT INTO `m_menu` VALUES (7, 2, 'rule', 'Rule', 'mdi-account-key', 'rule', 'rule/index', '', 1, 0, 2, 1, 'admin-Department-index');
-INSERT INTO `m_menu` VALUES (8, 2, 'addMenu', 'addMenu', '', 'addMenu', 'menu/add', '', 1, 1, 1, 1, 'admin-Department-save');
-INSERT INTO `m_menu` VALUES (9, 2, 'addRule', 'addRule', '', 'addRule', 'rule/add', '', 1, 1, 2, 1, 'admin-Department-update');
-INSERT INTO `m_menu` VALUES (10, 2, 'setting', 'Setting', 'mdi-circle-edit-outline', 'setting', 'setting/index', '', 1, 0, 3, 1, 'admin-Menu-update');
+INSERT INTO `m_menu` VALUES (3, 1, 'department', 'Department', 'mdi-puzzle', 'department', 'department/index', '', 1, 0, 1, 1, 'admin-Department-index');
+INSERT INTO `m_menu` VALUES (4, 1, 'position', 'Position', 'mdi-account-card-details', 'position', 'position/index', '', 1, 0, 2, 1, 'admin-Position-index');
+INSERT INTO `m_menu` VALUES (5, 1, 'user', 'User', 'mdi-account-group', 'user', 'user/index', '', 1, 0, 3, 1, 'admin-AdminUser-index');
+INSERT INTO `m_menu` VALUES (6, 2, 'menu', 'Menu', 'mdi-format-list-bulleted', 'menu', 'menu/index', '', 1, 0, 1, 1, 'admin-Menu-index');
+INSERT INTO `m_menu` VALUES (7, 2, 'rule', 'Rule', 'mdi-account-key', 'rule', 'rule/index', '', 1, 0, 2, 1, 'admin-Rule-index');
+INSERT INTO `m_menu` VALUES (8, 2, 'addMenu', 'addMenu', '', 'addMenu', 'menu/add', '', 1, 1, 1, 1, '');
+INSERT INTO `m_menu` VALUES (9, 2, 'addRule', 'addRule', '', 'addRule', 'rule/add', '', 1, 1, 2, 1, '');
+INSERT INTO `m_menu` VALUES (10, 2, 'setting', 'Setting', 'mdi-circle-edit-outline', 'setting', 'setting/index', '', 1, 0, 3, 1, 'admin-Setting-index');
 COMMIT;
 
 -- ----------------------------
@@ -187,7 +187,7 @@ CREATE TABLE `m_sys_config` (
 -- Records of m_sys_config
 -- ----------------------------
 BEGIN;
-INSERT INTO `m_sys_config` VALUES (1, 'Walnutech1', '', '');
+INSERT INTO `m_sys_config` VALUES (1, 'Walnutech', '', '');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

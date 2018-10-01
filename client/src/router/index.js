@@ -8,10 +8,10 @@ import util from '@/utils'
 Vue.use(Router)
 
 export const publicRouter = [
-  { path: '/login', name: 'login', component: () => import('@/views/public/Login'), hidden: true },
-  { path: '/404', name: '404', component: () => import('@/views/public/404'), hidden: true },
-  { path: '/401', name: '401', component: () => import('@/views/public/401'), hidden: true },
-  { path: '/lock', name: 'lock', component: () => import('@/views/public/Lock'), hidden: true },
+  { path: '/login', component: () => import('@/views/public/Login'), hidden: true },
+  { path: '/404', component: () => import('@/views/public/404'), hidden: true },
+  { path: '/401', component: () => import('@/views/public/401'), hidden: true },
+  { path: '/lock', component: () => import('@/views/public/Lock'), hidden: true },
   { path: '/refresh', component: () => import('@/views/public/Refresh'), name: 'refresh', hidden: true },
   { path: '*', component: () => import('@/views/public/404'), hidden: true }
 ]
@@ -123,6 +123,10 @@ router.beforeEach((to, from, next) => {
       if (!store.getters.getUserInfo.length) {
         let user = JSON.parse(sessionStorage.getItem('user'))
         store.dispatch('setUserInfo', user)
+      }
+      if (!store.getters.getSetting.length) {
+        let setting = JSON.parse(sessionStorage.getItem('setting'))
+        store.dispatch('setSetting', setting)
       }
       if (!store.getters.getPrivateRouter.length) {
         let r = util.setMenus()

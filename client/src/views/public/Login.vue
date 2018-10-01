@@ -86,13 +86,17 @@ export default {
       this.$i18n.locale = e
     },
     async getData () {
-      this.loading = true
-      let res = await api.base.getSetting()
-      util.response(res, this)
-      this.loading = false
-      if (res.code === 200) {
-        this.name = res.data.name
-        store.dispatch('setSetting', res.data)
+      if (store.getters.getSetting.length) {
+        this.name = store.getters.getSetting.name
+      } else {
+        this.loading = true
+        let res = await api.base.getSetting()
+        util.response(res, this)
+        this.loading = false
+        if (res.code === 200) {
+          this.name = res.data.name
+          sessionStorage.setItem('setting', JSON.stringify(res.data))
+        }
       }
     }
   },

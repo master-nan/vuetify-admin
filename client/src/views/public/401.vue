@@ -1,7 +1,7 @@
 <template lang="pug">
-    v-container
-      div 401 您没有权限
-      v-btn(dark @click="goback" color="primary")
+  v-container
+    div 401 您没有权限
+    v-btn(dark @click="goback" color="primary") 返回
 </template>
 <script>
 export default {

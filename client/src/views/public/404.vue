@@ -1,7 +1,7 @@
 <template lang="pug">
-    v-container
-      div 404 页面不存在
-      v-btn(dark @click="goback" color="primary")
+  v-container
+    div 404 页面不存在
+    v-btn(dark @click="goback" color="primary") 返回
 </template>
 <script>
 export default {

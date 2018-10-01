@@ -1,11 +1,10 @@
 import { currentRouter } from '@/router'
 const mutations = {
   setPrivateRouter (state, data) {
-    console.log(2)
     if (data && data.length) {
       state.privateRouter = currentRouter.concat(data)
     } else {
-      state.privateRouter = currentRouter
+      state.privateRouter = []
     }
   },
   setUserInfo (state, data) {
@@ -13,6 +12,13 @@ const mutations = {
       state.userInfo = data
     } else {
       state.userInfo = []
+    }
+  },
+  setSetting (state, data) {
+    if (data) {
+      state.setting = data
+    } else {
+      state.setting = []
     }
   }
 }

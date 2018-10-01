@@ -19,6 +19,8 @@ let response = async (res, vm) => {
 
 let clearSome = (vm) => {
   sessionStorage.removeItem('token')
+  sessionStorage.removeItem('menus')
+  sessionStorage.removeItem('user')
   vm.$store.dispatch('setPrivateRouter', null)
   vm.$store.dispatch('setUserInfo', null)
   vm.$router.push('/login')

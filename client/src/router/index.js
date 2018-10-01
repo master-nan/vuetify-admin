@@ -3,8 +3,7 @@ import Router from 'vue-router'
 import store from '@/store'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
-
-import home from '@/views/public/Home'
+import comps from '@/utils/components'
 import util from '@/utils'
 Vue.use(Router)
 
@@ -20,7 +19,7 @@ export const publicRouter = [
 export const currentRouter = [
   {
     path: '',
-    component: home,
+    component: comps['home'],
     meta: {
       title: 'Home',
       icon: 'mdi-home'
@@ -125,12 +124,9 @@ router.beforeEach((to, from, next) => {
         let user = JSON.parse(sessionStorage.getItem('user'))
         store.dispatch('setUserInfo', user)
       }
-      console.log(store.getters.getPrivateRouter)
-      console.log(store.getters.getPrivateRouter.length)
       if (!store.getters.getPrivateRouter.length) {
         let r = util.setMenus()
         if (r) {
-          console.log(1)
           store.dispatch('setPrivateRouter', r).then(() => {
             router.addRoutes(store.getters.getPrivateRouter)
             next({ ...to, replace: true })

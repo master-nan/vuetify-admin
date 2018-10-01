@@ -10,6 +10,12 @@ const actions = {
       commit('setUserInfo', data)
       resolve()
     })
+  },
+  setSetting ({commit}, data) {
+    return new Promise(resolve => {
+      commit('setSetting', data)
+      resolve()
+    })
   }
 }
 

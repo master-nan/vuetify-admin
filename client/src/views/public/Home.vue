@@ -2,7 +2,7 @@
   v-content
     v-navigation-drawer(:mini-variant="miniVariant" :clipped="clipped" v-model="drawer" fixed app)
       div.pa-4.text-xs-center
-        div.display-1.py-4(style="color:#1565C0") Walnutech
+        div.display-1.py-4(style="color:#1565C0") {{setting['name']}}
         div
           v-btn(dark href="https://github.com/master-nan/vuetify-admin" color="primary")
             v-icon(left, dark) star
@@ -32,6 +32,11 @@ export default {
       drawer: true,
       fixed: false,
       miniVariant: false
+    }
+  },
+  computed: {
+    setting () {
+      return this.$store.getters.getSetting
     }
   },
   methods: {

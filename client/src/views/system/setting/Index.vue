@@ -12,6 +12,7 @@
 <script>
 import util from '@/utils'
 import api from '@/api'
+import store from '@/store'
 export default {
   name: 'setting',
   data () {
@@ -31,6 +32,8 @@ export default {
         util.response(res, this)
         this.$refs.loading.close()
         if (res.code === 200) {
+          let data = util.cloneDeep(this.form)
+          store.dispatch('setSetting', data)
           this.$refs.message.open(res.error, 'success')
         } else {
           this.$refs.message.open(res.error, 'error')

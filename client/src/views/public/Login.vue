@@ -4,7 +4,7 @@
         v-layout(align-center justify-center)
           v-flex(xs12 sm8 md4)
             div.pa-3.text-xs-center
-              div.display-3.py-4(style="color:#1565C0") Walnutech
+              div.display-3.py-4(style="color:#1565C0") {{name}}
             v-card.elevation-12
               v-toolbar(dark color="primary")
                 v-toolbar-title {{ 'Login'|i18nName('Login',self) }}
@@ -33,6 +33,7 @@
 <script>
 import Footer from '@/views/components/public/Footer'
 import api from '@/api'
+import store from '@/store'
 import util from '@/utils'
 import http from '@/utils/http'
 export default {
@@ -50,7 +51,8 @@ export default {
       langs: [
         { key: 'zh-CN', value: '简体中文' },
         { key: 'en-US', value: 'Englinsh' }
-      ]
+      ],
+      name: null
     }
   },
   components: {
@@ -82,7 +84,20 @@ export default {
     },
     changeLocale (e) {
       this.$i18n.locale = e
+    },
+    async getData () {
+      this.loading = true
+      let res = await api.base.getSetting()
+      util.response(res, this)
+      this.loading = false
+      if (res.code === 200) {
+        this.name = res.data.name
+        store.dispatch('setSetting', res.data)
+      }
     }
+  },
+  created () {
+    this.getData()
   }
 }
 </script>

@@ -82,4 +82,14 @@ class Base extends Controller
             return msg(100, null, $user->getError());
         }
     }
+
+    public function getSetting()
+    {
+        $ret = model('SysConfig')->getConfig();
+        if ($ret) {
+            return msg(200, $ret);
+        } else {
+            return msg(204, [], $this->model->getError());
+        }
+    }
 }

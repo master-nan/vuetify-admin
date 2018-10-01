@@ -15,7 +15,6 @@
         template(slot="items" slot-scope="props")
           td {{ props.index + 1 }}
           td.text-xs-left {{ props.item.name }}
-          td.text-xs-left {{ props.item.remark }}
           td.text-xs-left
             v-chip(:color="props.item.status|statusChipFilter(1)|i18nName('Tag',self)" label outline) {{props.item.status|statusFilter(1)|i18nName('Tag',self)}}
           td.justify-left
@@ -68,7 +67,6 @@ export default{
       headers: [
         { text: 'Index', sortable: false },
         { text: 'Name', sortable: false },
-        { text: 'Remark', sortable: false },
         { text: 'Status', sortable: false },
         { text: 'Action', sortable: false }
       ],

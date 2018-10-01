@@ -13,6 +13,13 @@ let login = async (data) => {
   return result
 }
 
+let getSetting = async (data = {}) => {
+  let url = path + '/getSetting'
+  let result = await http.get(url, data)
+  return result
+}
+
 export default{
-  login
+  login,
+  getSetting
 }

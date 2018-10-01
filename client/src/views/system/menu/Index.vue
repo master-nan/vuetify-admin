@@ -50,11 +50,11 @@
             v-text-field(v-model="form.title" :rules="[v => !!v || 'Name is required']" label="标题" required)
             v-text-field(v-model="form.name" :rules="[v => !!v || 'Name is required']" label="名称" required)
             v-select(:items="options" label="父节点" item-text="title" item-value="id" :rules="pidRules" v-model="form.pid")
-            v-switch(v-model="form.show" :label="`显示完整菜单：${form.show.toString()}`" color="success" hide-details required)
+            v-switch(v-if="form.pid == 0" v-model="form.show" :label="`显示完整菜单：${form.show.toString()}`" color="success" hide-details required)
             v-switch(v-model="form.hidden" :label="`左侧隐藏：${form.hidden.toString()}`" color="indigo" hide-details required)
             v-text-field(v-model="form.component" label="主体" placeholder="示例：home (客户端components.js中)" required)
             v-text-field(v-model="form.path" label="访问路径" placeholder="示例：/index (子菜单请去掉/)" required)
-            v-text-field(v-model="form.redirect" label="重定向" placeholder="示例：/index (子节点无效)" required)
+            v-text-field(v-if="form.pid == 0" v-model="form.redirect" label="重定向" placeholder="示例：/index (子节点无效)" required)
             v-text-field(v-model="form.sort" label="排序" :rules="sortRules" required type="number")
             v-btn.mt-2.mr-2(@click="cancel" dark)
               v-icon(dark left) mdi-close-circle

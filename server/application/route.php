@@ -21,8 +21,10 @@ return [
         'setting'   =>  'admin/sysConfig',
     ],
     '[base]'      => [
-        'index'   => ['admin/base/index', ['method' => 'get']],
-        'login'   => ['admin/base/login', ['method' => 'post']],
+        'index'       => ['admin/base/index', ['method' => 'get']],
+        'login'       => ['admin/base/login', ['method' => 'post']],
+        'getSetting'  => ['admin/base/getSetting', ['method' => 'get']],
+
     ],
     '[comm]'      => [
         'logout'  => ['admin/comm/logout', ['method' => 'post']],
@@ -37,6 +39,7 @@ return [
     'position/enable'   => ['admin/position/enable', ['method' => 'post']],
     'department/enable' => ['admin/department/enable', ['method' => 'post']],
     'menu/enable'       => ['admin/menu/enable', ['method' => 'post']],
+
     // MISS路由
     '__miss__'    => 'admin/base/index',
 ];

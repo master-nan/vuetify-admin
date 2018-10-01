@@ -33,6 +33,7 @@
           v-list-tile-title 修改密码
         v-list-tile(@click="handleCommand('logout')")
           v-list-tile-title 退出
+    MyMessage(ref="message")
 </template>
 <script>
 import api from '@/api'
@@ -70,11 +71,6 @@ export default {
         case 'logout':
           let res = await api.comm.logout()
           util.response(res, this)
-          if (res.code === 200) {
-            util.message('您已退出')
-            await util.sleep(300)
-            util.clearSome(this)
-          }
           util.clearSome(this)
           break
         case 'change':

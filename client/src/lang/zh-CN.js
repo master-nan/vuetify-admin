@@ -8,6 +8,8 @@ module.exports = {
     System: '系统设置',
     Menu: '菜单管理',
     Rule: '权限管理',
+    addMenu: '添加菜单',
+    addRule: '添加权限',
     Setting: '全局设置'
   },
   Button: {

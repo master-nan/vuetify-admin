@@ -8,6 +8,8 @@ module.exports = {
     System: 'System',
     Menu: 'Menu',
     Rule: 'Rule',
+    addMenu: 'Add Menu',
+    addRule: 'Add Rule',
     Setting: 'Setting'
   },
   Button: {

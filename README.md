@@ -60,7 +60,7 @@
 
 ## 说明
 
-本项使用了vuetify支持响应式布局，目侧边栏支持三级目录，但是由于[vuetify](https://github.com/vuetifyjs/vuetify)没有级联选择器，所以在后台添加目录时暂时只支持二级。
+本项使用了vuetify支持响应式布局，侧边栏支持三级目录，但是由于[vuetify](https://github.com/vuetifyjs/vuetify)没有级联选择器，所以在后台添加目录时暂时只支持二级。
 其他如目录、功能等与[vue-thinkphp-admin](https://github.com/master-nan/vue-thinkphp-admin)基本类似，可以参考。本项目新增了国际化，以及后台名称设置，更多全局配置可以自行添加。
 
 ## 注意

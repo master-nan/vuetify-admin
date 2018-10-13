@@ -22,7 +22,7 @@ class Comm extends Controller
     public function checkToken()
     {
         $this->user = json_decode(cache($this->token), true);
-        if (!$this->user || $this->user == 1) {
+        if (!is_array($this->user)) {
             exit(json_encode(['code'=>101, 'error'=>'请重新登录']));
         }
         //每次访问自动续命

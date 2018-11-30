@@ -37,20 +37,20 @@ class Base extends Controller
         if ($ret) {
 
             //记录登录日志  ---begin
-            $ip = $this->request->ip();
-            $url='http://freeapi.ipip.net/'.$ip;
-            $result = json_decode(curl_get($url), true);
-            if ($result) {
-                $res = [
-                  'ip'        => $ip,
-                  'country'   => $result[0],
-                  'region'    => $result[1],
-                  'city'      => $result[2],
-                  'isp'       => $result[4],
-                  'create_at' =>time(),
-                ];
-                model('AccessLogs')->saveLogs($res);
-            }
+            // $ip = $this->request->ip();
+            // $url='http://freeapi.ipip.net/'.$ip;
+            // $result = json_decode(curl_get($url), true);
+            // if ($result) {
+            //     $res = [
+            //       'ip'        => $ip,
+            //       'country'   => $result[0],
+            //       'region'    => $result[1],
+            //       'city'      => $result[2],
+            //       'isp'       => $result[4],
+            //       'create_at' =>time(),
+            //     ];
+            //     model('AccessLogs')->saveLogs($res);
+            // }
             // ---end
 
             unset($ret['password']);

@@ -5,14 +5,6 @@
 [vuetify-admin](https://github.com/master-nan/vuetify-admin) 是在我另一个项目[vue-thinkphp-admin](https://github.com/master-nan/vue-thinkphp-admin)的基础上将[element-ui](https://github.com/ElemeFE/element)换成了[vuetify](https://github.com/vuetifyjs/vuetify)并改进了部分代码逻辑以及数据库部分修改。
 
 - [项目地址](https://github.com/master-nan/vuetify-admin)
-- [在线地址](http://demo.vuetify.walnutech.com)
-
-全部权限账号：
-`dev`   `111111`
-
-部分权限账号：
-`test`     `111111`  
-
 
 ## 准备
 
